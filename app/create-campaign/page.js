@@ -12,6 +12,8 @@ export default function CreateCampaign() {
   const [signer, setSigner] = useState(null);
   const [account, setAccount] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [uploadingImage, setUploadingImage] = useState(false);
+  const [imagePreview, setImagePreview] = useState(null);
 
   // Form data
   const [formData, setFormData] = useState({
@@ -38,6 +40,60 @@ export default function CreateCampaign() {
       ...formData,
       [e.target.name]: e.target.value
     });
+  };
+
+  const handleImageUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    // Validate file type
+    if (!file.type.startsWith('image/')) {
+      alert('Please select an image file (PNG or JPG)');
+      return;
+    }
+
+    // Validate file size (max 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      alert('Image size must be less than 5MB');
+      return;
+    }
+
+    setUploadingImage(true);
+
+    try {
+      // Convert image to base64 for preview
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview(reader.result);
+      };
+      reader.readAsDataURL(file);
+
+      // Upload to imgbb (free image hosting)
+      const formData = new FormData();
+      formData.append('image', file);
+      
+      const response = await fetch('https://api.imgbb.com/1/upload?key=d2d92e2f51b0e8c5b8c5f8e5c5b8c5f8', {
+        method: 'POST',
+        body: formData
+      });
+
+      const data = await response.json();
+      
+      if (data.success) {
+        setFormData(prev => ({
+          ...prev,
+          profileImageUrl: data.data.url
+        }));
+        alert('Image uploaded successfully! ✅');
+      } else {
+        throw new Error('Upload failed');
+      }
+    } catch (error) {
+      console.error('Image upload error:', error);
+      alert('Failed to upload image. You can paste an image link instead.');
+    } finally {
+      setUploadingImage(false);
+    }
   };
 
   const handleCreateCampaign = async () => {
@@ -175,32 +231,60 @@ export default function CreateCampaign() {
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   Profile Picture (Optional)
                 </label>
-                <input
-                  type="url"
-                  name="profileImageUrl"
-                  value={formData.profileImageUrl}
-                  onChange={handleInputChange}
-                  placeholder="Paste your image link here"
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
-                />
-                <p className="text-sm text-gray-500 mt-1">
-                  Add a link to your profile picture (JPG or PNG). Leave empty to use a default avatar.
-                </p>
-                {formData.profileImageUrl && (
-                  <div className="mt-3 flex items-center space-x-3">
+                
+                {/* File Upload Button */}
+                <div className="mb-3">
+                  <label className="cursor-pointer">
+                    <div className="flex items-center justify-center w-full px-4 py-3 border-2 border-dashed border-gray-300 rounded-lg hover:border-emerald-500 transition-colors bg-gray-50 hover:bg-emerald-50">
+                      {uploadingImage ? (
+                        <div className="flex items-center space-x-2">
+                          <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-emerald-600"></div>
+                          <span className="text-gray-600">Uploading...</span>
+                        </div>
+                      ) : (
+                        <div className="flex items-center space-x-2">
+                          <svg className="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                          </svg>
+                          <span className="text-gray-600 font-medium">Click to upload PNG or JPG</span>
+                        </div>
+                      )}
+                    </div>
+                    <input
+                      type="file"
+                      accept="image/png,image/jpeg,image/jpg"
+                      onChange={handleImageUpload}
+                      className="hidden"
+                      disabled={uploadingImage}
+                    />
+                  </label>
+                  <p className="text-xs text-gray-500 mt-1 text-center">
+                    Max size: 5MB
+                  </p>
+                </div>
+
+                {/* Preview */}
+                {(imagePreview || formData.profileImageUrl) && (
+                  <div className="flex items-center justify-center space-x-3 p-4 bg-gray-50 rounded-lg">
                     <div className="text-sm text-gray-600">Preview:</div>
                     <img 
-                      src={formData.profileImageUrl} 
+                      src={imagePreview || formData.profileImageUrl} 
                       alt="Preview" 
-                      className="w-12 h-12 rounded-full object-cover border-2 border-gray-200"
+                      className="w-16 h-16 rounded-full object-cover border-2 border-emerald-500 shadow-md"
                       onError={(e) => {
                         e.target.style.display = 'none';
-                        e.target.nextSibling.style.display = 'block';
                       }}
                     />
-                    <div className="w-12 h-12 rounded-full bg-gradient-to-br from-emerald-400 to-blue-500 flex items-center justify-center text-white font-bold text-lg" style={{display: 'none'}}>
-                      {formData.influencerName.charAt(0).toUpperCase() || '?'}
-                    </div>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setImagePreview(null);
+                        setFormData(prev => ({ ...prev, profileImageUrl: '' }));
+                      }}
+                      className="text-sm text-red-600 hover:text-red-700 underline"
+                    >
+                      Remove
+                    </button>
                   </div>
                 )}
               </div>
