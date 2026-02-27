@@ -12,12 +12,11 @@ contract InfluencerDonationNFT is ERC721, ReentrancyGuard {
         uint256 totalDonations;
         uint256 goalAmount;
         bool active;
+        address creator;
     }
     
     uint256 private _tokenIdCounter;
     mapping(uint256 => InfluencerData) public influencers;
-    mapping(address => uint256) public walletToTokenId;
-    mapping(address => bool) public hasMinted;
     
     event NFTMinted(address indexed influencer, uint256 indexed tokenId, CharityType charity, uint256 goalAmount);
     event DonationReceived(uint256 indexed tokenId, address indexed donor, uint256 amount);
@@ -26,7 +25,6 @@ contract InfluencerDonationNFT is ERC721, ReentrancyGuard {
     constructor() ERC721("InfluencerDonationNFT", "IDNFT") {}
     
     function mintMyNFT(CharityType _charity, uint256 _goalAmount) external {
-        require(!hasMinted[msg.sender], "Already minted NFT");
         require(_goalAmount > 0, "Goal must be greater than 0");
         
         uint256 tokenId = _tokenIdCounter++;
@@ -36,11 +34,9 @@ contract InfluencerDonationNFT is ERC721, ReentrancyGuard {
             charity: _charity,
             totalDonations: 0,
             goalAmount: _goalAmount,
-            active: true
+            active: true,
+            creator: msg.sender
         });
-        
-        walletToTokenId[msg.sender] = tokenId;
-        hasMinted[msg.sender] = true;
         
         emit NFTMinted(msg.sender, tokenId, _charity, _goalAmount);
     }
@@ -84,5 +80,30 @@ contract InfluencerDonationNFT is ERC721, ReentrancyGuard {
     
     function getTotalNFTs() external view returns (uint256) {
         return _tokenIdCounter;
+    }
+    
+    // Get all campaigns created by a specific address
+    function getCampaignsByCreator(address creator) external view returns (uint256[] memory) {
+        uint256 count = 0;
+        
+        // First, count how many campaigns this creator has
+        for (uint256 i = 0; i < _tokenIdCounter; i++) {
+            if (influencers[i].creator == creator) {
+                count++;
+            }
+        }
+        
+        // Create array and populate it
+        uint256[] memory campaigns = new uint256[](count);
+        uint256 index = 0;
+        
+        for (uint256 i = 0; i < _tokenIdCounter; i++) {
+            if (influencers[i].creator == creator) {
+                campaigns[index] = i;
+                index++;
+            }
+        }
+        
+        return campaigns;
     }
 }

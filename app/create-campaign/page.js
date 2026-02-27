@@ -12,7 +12,6 @@ export default function CreateCampaign() {
   const [signer, setSigner] = useState(null);
   const [account, setAccount] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [hasExistingNFT, setHasExistingNFT] = useState(false);
 
   // Form data
   const [formData, setFormData] = useState({
@@ -24,23 +23,9 @@ export default function CreateCampaign() {
 
   useEffect(() => {
     if (provider && account) {
-      checkExistingNFT();
+      // No need to check for existing NFT anymore
     }
   }, [provider, account]);
-
-  const checkExistingNFT = async () => {
-    try {
-      const contract = getContract(provider);
-      const hasMinted = await contract.hasMinted(account);
-      setHasExistingNFT(hasMinted);
-      
-      if (hasMinted) {
-        alert('You have already created a campaign with this wallet!');
-      }
-    } catch (error) {
-      console.error('Error checking NFT:', error);
-    }
-  };
 
   const handleWalletConnect = (p, s, a) => {
     setProvider(p);
@@ -61,13 +46,13 @@ export default function CreateCampaign() {
       return;
     }
 
-    if (hasExistingNFT) {
-      alert('You have already created a campaign!');
+    if (!formData.goalAmount || parseFloat(formData.goalAmount) <= 0) {
+      alert('Please enter a valid goal amount');
       return;
     }
 
-    if (!formData.goalAmount || parseFloat(formData.goalAmount) <= 0) {
-      alert('Please enter a valid goal amount');
+    if (!formData.campaignName) {
+      alert('Please enter a campaign name');
       return;
     }
 
@@ -139,17 +124,6 @@ export default function CreateCampaign() {
               <div className="inline-block">
                 <WalletConnectButton onConnect={handleWalletConnect} />
               </div>
-            </div>
-          </div>
-        ) : hasExistingNFT ? (
-          <div className="bg-white/90 backdrop-blur-sm rounded-xl border border-gray-200 p-8">
-            <div className="bg-red-50 border border-red-200 rounded-lg p-6 text-center">
-              <p className="text-red-800 font-medium">
-                ⚠️ This wallet has already created a campaign
-              </p>
-              <p className="text-red-600 text-sm mt-2">
-                Please use a different wallet to create a new campaign
-              </p>
             </div>
           </div>
         ) : (
@@ -227,13 +201,7 @@ export default function CreateCampaign() {
 
               <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
                 <p className="text-blue-800 text-sm">
-                  💡 Tip: You can donate to your own campaign to kickstart it and encourage others to contribute!
-                </p>
-              </div>
-
-              <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-                <p className="text-yellow-800 text-sm">
-                  ⚠️ Note: Once created, you cannot create another campaign with this wallet. Make sure all details are correct.
+                  💡 Tip: You can create multiple campaigns and donate to your own campaigns to kickstart them!
                 </p>
               </div>
 
