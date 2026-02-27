@@ -36,9 +36,32 @@ export default function Dashboard() {
   const loadDashboardData = async () => {
     setLoading(true);
     try {
-      const contract = getContract(provider);
+      let tempProvider;
       
-      // Get all campaigns created by this user
+      if (provider) {
+        tempProvider = provider;
+      } else if (typeof window !== 'undefined' && window.ethereum) {
+        tempProvider = new ethers.BrowserProvider(window.ethereum);
+      } else {
+        const rpcUrls = [
+          'https://ethereum-sepolia.publicnode.com',
+          'https://rpc.sepolia.org',
+          'https://sepolia.gateway.tenderly.co'
+        ];
+        
+        for (const rpcUrl of rpcUrls) {
+          try {
+            tempProvider = new ethers.JsonRpcProvider(rpcUrl);
+            await tempProvider.getBlockNumber();
+            break;
+          } catch (err) {
+            continue;
+          }
+        }
+      }
+      
+      const contract = getContract(tempProvider);
+      
       const campaignIds = await contract.getCampaignsByCreator(account);
       
       if (campaignIds.length === 0) {
@@ -46,36 +69,33 @@ export default function Dashboard() {
         return;
       }
 
-      // For now, show the first campaign (you can enhance this to show all campaigns)
       const tokenId = campaignIds[0];
       
-      // Get campaign details
       const influencer = await contract.influencers(tokenId);
       const owner = await contract.ownerOf(tokenId);
       
-      // New contract returns: [charity, totalDonations, goalAmount, active, creator, influencerName, profileImageUrl]
       const campaignData = {
         tokenId: tokenId.toString(),
         owner,
-        charity: CHARITY_TYPES[influencer[0]], // charity is index 0
-        totalDonations: parseFloat(formatEther(influencer[1])), // totalDonations is index 1
-        goalAmount: parseFloat(formatEther(influencer[2])), // goalAmount is index 2
-        active: influencer[3], // active is index 3
-        creator: influencer[4], // creator is index 4
-        influencerName: influencer[5] || `${owner.slice(0, 6)}...${owner.slice(-4)}`, // influencerName is index 5
-        profileImageUrl: influencer[6] || '' // profileImageUrl is index 6
+        charity: CHARITY_TYPES[influencer[0]],
+        totalDonations: parseFloat(formatEther(influencer[1])),
+        goalAmount: parseFloat(formatEther(influencer[2])),
+        active: influencer[3],
+        creator: influencer[4],
+        influencerName: influencer[5] || `${owner.slice(0, 6)}...${owner.slice(-4)}`,
+        profileImageUrl: influencer[6] || ''
       };
       
       setCampaign(campaignData);
 
-      // Calculate stats
       const progress = campaignData.goalAmount > 0 
         ? (campaignData.totalDonations / campaignData.goalAmount) * 100 
         : 0;
 
-      // Get donation events
+      console.log('Querying donation events for token:', tokenId.toString());
       const donationFilter = contract.filters.DonationReceived(tokenId);
       const donationEvents = await contract.queryFilter(donationFilter);
+      console.log('Found donation events:', donationEvents.length);
       
       const txList = await Promise.all(
         donationEvents.map(async (event) => {
@@ -89,13 +109,14 @@ export default function Dashboard() {
         })
       );
 
-      setTransactions(txList.reverse()); // Most recent first
+      setTransactions(txList.reverse());
 
-      // Calculate statistics
       const donorCount = new Set(txList.map(tx => tx.donor)).size;
       const avgDonation = txList.length > 0 
         ? campaignData.totalDonations / txList.length 
         : 0;
+
+      console.log('Stats:', { donorCount, avgDonation, totalDonations: campaignData.totalDonations });
 
       setStats({
         totalDonations: campaignData.totalDonations,
@@ -106,6 +127,7 @@ export default function Dashboard() {
 
     } catch (error) {
       console.error('Error loading dashboard:', error);
+      console.error('Error details:', error.message);
     } finally {
       setLoading(false);
     }
