@@ -4,6 +4,7 @@ import { ethers } from 'ethers';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import WalletConnectButton from '@/components/WalletConnectButton';
+import DonFanLogo from '@/components/DonFanLogo';
 import { getContract, CHARITY_TYPES, formatEther } from '@/lib/contract';
 
 export default function Dashboard() {
@@ -150,9 +151,7 @@ export default function Dashboard() {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
             <Link href="/">
               <div className="flex items-center space-x-2 cursor-pointer group">
-                <div className="w-10 h-10 bg-emerald-600 rounded-lg flex items-center justify-center group-hover:bg-emerald-700 transition-colors shadow-lg">
-                  <span className="text-white font-bold text-xl">D</span>
-                </div>
+                <DonFanLogo size="md" className="group-hover:scale-110 transition-transform" />
                 <h1 className="text-2xl font-bold text-gray-900 group-hover:text-emerald-600 transition-colors">
                   DonFan
                 </h1>

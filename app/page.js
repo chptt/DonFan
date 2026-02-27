@@ -4,6 +4,7 @@ import { ethers } from 'ethers';
 import Link from 'next/link';
 import WalletConnectButton from '@/components/WalletConnectButton';
 import InfluencerAvatar from '@/components/InfluencerAvatar';
+import DonFanLogo from '@/components/DonFanLogo';
 import { getContract, CHARITY_TYPES, formatEther, CONTRACT_ADDRESS } from '@/lib/contract';
 
 export default function Home() {
@@ -101,9 +102,7 @@ export default function Home() {
       <header className="bg-white/80 backdrop-blur-md border-b border-gray-200 sticky top-0 z-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
           <div className="flex items-center space-x-2">
-            <div className="w-10 h-10 bg-emerald-600 rounded-lg flex items-center justify-center hover:bg-emerald-700 transition-colors cursor-pointer shadow-lg">
-              <span className="text-white font-bold text-xl">D</span>
-            </div>
+            <DonFanLogo size="md" className="hover:scale-110 transition-transform cursor-pointer" />
             <h1 className="text-2xl font-bold text-gray-900 hover:text-emerald-600 transition-colors cursor-pointer">
               DonFan
             </h1>
@@ -441,9 +440,7 @@ export default function Home() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               <div>
                 <div className="flex items-center space-x-2 mb-4">
-                  <div className="w-8 h-8 bg-emerald-600 rounded-lg flex items-center justify-center">
-                    <span className="text-white font-bold">D</span>
-                  </div>
+                  <DonFanLogo size="sm" />
                   <span className="text-xl font-bold text-gray-900">DonFan</span>
                 </div>
                 <p className="text-gray-600 text-sm">
