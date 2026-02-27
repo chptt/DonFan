@@ -29,8 +29,8 @@ export default function CampaignPage() {
 
   const loadCampaign = async () => {
     try {
-      // Use Alchemy public Sepolia RPC endpoint (supports CORS)
-      const tempProvider = new ethers.JsonRpcProvider('https://eth-sepolia.g.alchemy.com/v2/demo');
+      // Use Infura public Sepolia RPC endpoint (supports CORS)
+      const tempProvider = new ethers.JsonRpcProvider('https://sepolia.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161');
       const contract = getContract(tempProvider);
       
       const influencer = await contract.influencers(tokenId);
