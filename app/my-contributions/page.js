@@ -55,15 +55,16 @@ export default function MyContributions() {
             const influencer = await contract.influencers(tokenId);
             const owner = await contract.ownerOf(tokenId);
             
+            // New contract returns: [charity, totalDonations, goalAmount, active, creator]
             return {
               tokenId: tokenId.toString(),
               amount,
               timestamp: block.timestamp,
               txHash: event.transactionHash,
-              charity: CHARITY_TYPES[influencer.charity],
+              charity: CHARITY_TYPES[influencer[0]], // charity is index 0
               campaignOwner: owner,
-              goalAmount: parseFloat(formatEther(influencer.goalAmount)),
-              totalDonations: parseFloat(formatEther(influencer.totalDonations))
+              goalAmount: parseFloat(formatEther(influencer[2])), // goalAmount is index 2
+              totalDonations: parseFloat(formatEther(influencer[1])) // totalDonations is index 1
             };
           } catch (error) {
             console.error(`Error loading campaign ${tokenId}:`, error);

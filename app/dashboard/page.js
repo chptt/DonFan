@@ -37,28 +37,30 @@ export default function Dashboard() {
     try {
       const contract = getContract(provider);
       
-      // Check if user has a campaign
-      const hasMinted = await contract.hasMinted(account);
+      // Get all campaigns created by this user
+      const campaignIds = await contract.getCampaignsByCreator(account);
       
-      if (!hasMinted) {
+      if (campaignIds.length === 0) {
         setLoading(false);
         return;
       }
 
-      // Get user's token ID
-      const tokenId = await contract.walletToTokenId(account);
+      // For now, show the first campaign (you can enhance this to show all campaigns)
+      const tokenId = campaignIds[0];
       
       // Get campaign details
       const influencer = await contract.influencers(tokenId);
       const owner = await contract.ownerOf(tokenId);
       
+      // New contract returns: [charity, totalDonations, goalAmount, active, creator]
       const campaignData = {
         tokenId: tokenId.toString(),
         owner,
-        charity: CHARITY_TYPES[influencer.charity],
-        totalDonations: parseFloat(formatEther(influencer.totalDonations)),
-        goalAmount: parseFloat(formatEther(influencer.goalAmount)),
-        active: influencer.active
+        charity: CHARITY_TYPES[influencer[0]], // charity is index 0
+        totalDonations: parseFloat(formatEther(influencer[1])), // totalDonations is index 1
+        goalAmount: parseFloat(formatEther(influencer[2])), // goalAmount is index 2
+        active: influencer[3], // active is index 3
+        creator: influencer[4] // creator is index 4
       };
       
       setCampaign(campaignData);

@@ -35,13 +35,15 @@ export default function Home() {
           const influencer = await contract.influencers(i);
           const owner = await contract.ownerOf(i);
           
+          // New contract returns: [charity, totalDonations, goalAmount, active, creator]
           campaignData.push({
             tokenId: i,
             owner,
-            charity: CHARITY_TYPES[influencer.charity],
-            totalDonations: parseFloat(formatEther(influencer.totalDonations)),
-            goalAmount: parseFloat(formatEther(influencer.goalAmount)),
-            active: influencer.active,
+            charity: CHARITY_TYPES[influencer[0]], // charity is index 0
+            totalDonations: parseFloat(formatEther(influencer[1])), // totalDonations is index 1
+            goalAmount: parseFloat(formatEther(influencer[2])), // goalAmount is index 2
+            active: influencer[3], // active is index 3
+            creator: influencer[4], // creator is index 4
             isDemo: false
           });
         } catch (error) {

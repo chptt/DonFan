@@ -35,13 +35,15 @@ export default function CampaignPage() {
       const influencer = await contract.influencers(tokenId);
       const owner = await contract.ownerOf(tokenId);
       
+      // New contract returns: [charity, totalDonations, goalAmount, active, creator]
       setCampaign({
         tokenId,
         owner,
-        charity: CHARITY_TYPES[influencer.charity],
-        totalDonations: parseFloat(formatEther(influencer.totalDonations)),
-        goalAmount: parseFloat(formatEther(influencer.goalAmount)),
-        active: influencer.active
+        charity: CHARITY_TYPES[influencer[0]], // charity is index 0
+        totalDonations: parseFloat(formatEther(influencer[1])), // totalDonations is index 1
+        goalAmount: parseFloat(formatEther(influencer[2])), // goalAmount is index 2
+        active: influencer[3], // active is index 3
+        creator: influencer[4] // creator is index 4
       });
     } catch (error) {
       console.error('Error loading campaign:', error);
