@@ -195,11 +195,12 @@ export default function CreateCampaign() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label htmlFor="influencerName" className="block text-sm font-medium text-gray-700 mb-2">
                   Your Name / Influencer Name
                 </label>
                 <input
                   type="text"
+                  id="influencerName"
                   name="influencerName"
                   value={formData.influencerName}
                   onChange={handleInputChange}
@@ -214,7 +215,7 @@ export default function CreateCampaign() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label htmlFor="profileImageUrl" className="block text-sm font-medium text-gray-700 mb-2">
                   Profile Picture (Optional)
                 </label>
                 
@@ -222,6 +223,7 @@ export default function CreateCampaign() {
                 <div className="mb-3">
                   <input
                     type="url"
+                    id="profileImageUrl"
                     name="profileImageUrl"
                     value={formData.profileImageUrl.startsWith('data:') ? '' : formData.profileImageUrl}
                     onChange={handleInputChange}
@@ -237,7 +239,7 @@ export default function CreateCampaign() {
 
                 {/* File Upload Button */}
                 <div className="mb-3">
-                  <label className="cursor-pointer">
+                  <label htmlFor="fileUpload" className="cursor-pointer">
                     <div className="flex items-center justify-center w-full px-4 py-3 border-2 border-dashed border-gray-300 rounded-lg hover:border-emerald-500 transition-colors bg-gray-50 hover:bg-emerald-50">
                       {uploadingImage ? (
                         <div className="flex items-center space-x-2">
@@ -255,6 +257,7 @@ export default function CreateCampaign() {
                     </div>
                     <input
                       type="file"
+                      id="fileUpload"
                       accept="image/png,image/jpeg,image/jpg"
                       onChange={handleImageUpload}
                       className="hidden"
@@ -273,6 +276,7 @@ export default function CreateCampaign() {
                     <img 
                       src={imagePreview || formData.profileImageUrl} 
                       alt="Preview" 
+                      crossOrigin="anonymous"
                       className="w-16 h-16 rounded-full object-cover border-2 border-emerald-500 shadow-md"
                       onError={(e) => {
                         e.target.style.display = 'none';
@@ -293,7 +297,7 @@ export default function CreateCampaign() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-3">
+                <label htmlFor="charityType" className="block text-sm font-medium text-gray-700 mb-3">
                   Select Charity Type
                 </label>
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
@@ -315,11 +319,12 @@ export default function CreateCampaign() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label htmlFor="goalAmount" className="block text-sm font-medium text-gray-700 mb-2">
                   Fundraising Goal (ETH)
                 </label>
                 <input
                   type="number"
+                  id="goalAmount"
                   name="goalAmount"
                   value={formData.goalAmount}
                   onChange={handleInputChange}
