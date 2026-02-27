@@ -14,6 +14,7 @@ export default function CreateCampaign() {
   const [loading, setLoading] = useState(false);
   const [uploadingImage, setUploadingImage] = useState(false);
   const [imagePreview, setImagePreview] = useState(null);
+  const [fileInputKey, setFileInputKey] = useState(Date.now());
 
   // Form data
   const [formData, setFormData] = useState({
@@ -258,6 +259,7 @@ export default function CreateCampaign() {
                     <input
                       type="file"
                       id="fileUpload"
+                      key={fileInputKey}
                       accept="image/png,image/jpeg,image/jpg"
                       onChange={handleImageUpload}
                       className="hidden"
@@ -287,6 +289,7 @@ export default function CreateCampaign() {
                       onClick={() => {
                         setImagePreview(null);
                         setFormData(prev => ({ ...prev, profileImageUrl: '' }));
+                        setFileInputKey(Date.now()); // Reset file input
                       }}
                       className="text-sm text-red-600 hover:text-red-700 underline"
                     >
