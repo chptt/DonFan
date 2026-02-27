@@ -173,24 +173,19 @@ export default function CreateCampaign() {
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Profile Picture URL (Optional)
+                  Profile Picture (Optional)
                 </label>
                 <input
                   type="url"
                   name="profileImageUrl"
                   value={formData.profileImageUrl}
                   onChange={handleInputChange}
-                  placeholder="https://example.com/your-photo.jpg or ipfs://..."
+                  placeholder="Paste your image link here"
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
                 />
-                <div className="mt-2 p-3 bg-blue-50 border border-blue-200 rounded-lg">
-                  <p className="text-sm text-blue-800 mb-2">
-                    💡 <strong>Recommended:</strong> Upload to IPFS for permanent, tamper-proof storage
-                  </p>
-                  <p className="text-xs text-blue-700">
-                    Free IPFS services: <a href="https://www.pinata.cloud/" target="_blank" rel="noopener noreferrer" className="underline hover:text-blue-900">Pinata</a>, <a href="https://nft.storage/" target="_blank" rel="noopener noreferrer" className="underline hover:text-blue-900">NFT.Storage</a>, <a href="https://web3.storage/" target="_blank" rel="noopener noreferrer" className="underline hover:text-blue-900">Web3.Storage</a>
-                  </p>
-                </div>
+                <p className="text-sm text-gray-500 mt-1">
+                  Add a link to your profile picture (JPG or PNG). Leave empty to use a default avatar.
+                </p>
                 {formData.profileImageUrl && (
                   <div className="mt-3 flex items-center space-x-3">
                     <div className="text-sm text-gray-600">Preview:</div>
