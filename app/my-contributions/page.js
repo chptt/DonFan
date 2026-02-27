@@ -21,6 +21,8 @@ export default function MyContributions() {
   useEffect(() => {
     if (provider && account) {
       loadContributions();
+    } else {
+      setLoading(false);
     }
   }, [provider, account]);
 
@@ -32,7 +34,19 @@ export default function MyContributions() {
   const loadContributions = async () => {
     setLoading(true);
     try {
-      const contract = getContract(provider);
+      // When wallet is connected, use MetaMask provider, otherwise use window.ethereum if available
+      let tempProvider;
+      
+      if (provider) {
+        tempProvider = provider;
+      } else if (typeof window !== 'undefined' && window.ethereum) {
+        tempProvider = new ethers.BrowserProvider(window.ethereum);
+      } else {
+        // Fallback: Use Cloudflare's public Ethereum gateway
+        tempProvider = new ethers.JsonRpcProvider('https://ethereum-sepolia.publicnode.com');
+      }
+      
+      const contract = getContract(tempProvider);
       
       // Get all donation events where this wallet was the donor
       const donationFilter = contract.filters.DonationReceived(null, account);

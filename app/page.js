@@ -217,8 +217,155 @@ export default function Home() {
           </div>
         </section>
 
+        {/* Active Campaigns Section - MOVED UP */}
+        <section className="py-16 bg-white">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="text-center mb-12">
+              <div className="inline-block mb-4 px-4 py-2 bg-emerald-100 rounded-full text-emerald-700 font-medium text-sm">
+                🎯 Support These Causes
+              </div>
+              <h3 className="text-3xl font-bold text-gray-900 mb-4">Active Campaigns</h3>
+              <p className="text-lg text-gray-600">Choose a campaign and make a difference today</p>
+            </div>
+
+            {loading ? (
+              <div className="text-center py-12">
+                <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-600"></div>
+                <p className="mt-4 text-gray-600">Loading campaigns...</p>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {campaigns.map((campaign) => {
+                  const progress = campaign.goalAmount > 0 
+                    ? (campaign.totalDonations / campaign.goalAmount) * 100 
+                    : 0;
+
+                  return (
+                    <div
+                      key={campaign.tokenId}
+                      className="bg-white rounded-xl border-2 border-gray-200 overflow-hidden hover:shadow-2xl hover:border-emerald-300 transition-all duration-300 transform hover:-translate-y-2"
+                    >
+                      <div className="p-6">
+                        {/* Demo Badge */}
+                        {campaign.isDemo && (
+                          <div className="mb-3 px-3 py-1 bg-blue-100 border border-blue-300 rounded-lg text-xs font-medium text-blue-700 inline-block">
+                            🎯 Demo Campaign - Try the Platform!
+                          </div>
+                        )}
+                        
+                        <div className="flex items-center justify-between mb-4">
+                          <span className={`px-3 py-1 rounded-full text-sm font-medium transition-all ${getCharityBadgeColor(campaign.charity)}`}>
+                            {campaign.charity}
+                          </span>
+                          <span className="text-xs text-gray-500">
+                            #{campaign.tokenId}
+                          </span>
+                        </div>
+
+                        <h3 className="text-lg font-semibold text-gray-900 mb-2 group-hover:text-emerald-600 transition-colors">
+                          {campaign.isDemo ? campaign.demoInfo.name : `Campaign by ${campaign.owner.slice(0, 6)}...${campaign.owner.slice(-4)}`}
+                        </h3>
+
+                        {campaign.isDemo && (
+                          <p className="text-sm text-gray-600 mb-4">
+                            {campaign.demoInfo.description}
+                          </p>
+                        )}
+
+                        <div className="space-y-2 mb-4">
+                          <div className="flex justify-between text-sm group">
+                            <span className="text-gray-600">Raised</span>
+                            <span className="font-semibold text-gray-900 group-hover:text-emerald-600 transition-colors">
+                              {campaign.totalDonations.toFixed(4)} ETH
+                            </span>
+                          </div>
+                          <div className="flex justify-between text-sm group">
+                            <span className="text-gray-600">Goal</span>
+                            <span className="font-semibold text-gray-900 group-hover:text-emerald-600 transition-colors">
+                              {campaign.goalAmount.toFixed(4)} ETH
+                            </span>
+                          </div>
+                        </div>
+
+                        <div className="mb-4">
+                          <div className="flex justify-between text-sm mb-2">
+                            <span className="text-gray-600">Progress</span>
+                            <span className="font-semibold text-emerald-600">
+                              {Math.min(progress, 100).toFixed(1)}%
+                            </span>
+                          </div>
+                          <div className="h-3 bg-gray-100 rounded-full overflow-hidden">
+                            <div
+                              className="h-full bg-gradient-to-r from-emerald-400 to-emerald-600 transition-all duration-500 hover:from-emerald-500 hover:to-emerald-700"
+                              style={{ width: `${Math.min(progress, 100)}%` }}
+                            />
+                          </div>
+                        </div>
+
+                        {campaign.isDemo ? (
+                          <div className="space-y-2">
+                            <button
+                              onClick={() => alert('This is a demo campaign!\n\nTo test real donations:\n1. Create your own campaign\n2. Or wait for other users to create campaigns\n\nDemo campaigns help you see how the platform works!')}
+                              className="w-full px-6 py-3 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-all transform hover:scale-105 min-h-[44px]"
+                            >
+                              Try Demo (Info Only)
+                            </button>
+                            <Link href="/create-campaign">
+                              <button className="w-full px-6 py-3 bg-emerald-600 text-white rounded-lg font-medium hover:bg-emerald-700 transition-all transform hover:scale-105 min-h-[44px]">
+                                Create Real Campaign
+                              </button>
+                            </Link>
+                          </div>
+                        ) : (
+                          <Link href={`/campaign/${campaign.tokenId}`}>
+                            <button className="w-full px-6 py-3 bg-emerald-600 text-white rounded-lg font-medium hover:bg-emerald-700 transition-all transform hover:scale-105 active:scale-95 min-h-[44px] shadow-lg hover:shadow-xl">
+                              View & Donate →
+                            </button>
+                          </Link>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        </section>
+
+        {/* Stats Section */}
+        <section className="py-12 bg-gray-50">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+              <div className="group cursor-pointer">
+                <div className="text-4xl font-bold text-emerald-600 mb-2 group-hover:scale-110 transition-transform">
+                  {campaigns.filter(c => !c.isDemo).length}+
+                </div>
+                <div className="text-sm text-gray-600">Real Campaigns</div>
+              </div>
+              <div className="group cursor-pointer">
+                <div className="text-4xl font-bold text-emerald-600 mb-2 group-hover:scale-110 transition-transform">
+                  100%
+                </div>
+                <div className="text-sm text-gray-600">Transparent</div>
+              </div>
+              <div className="group cursor-pointer">
+                <div className="text-4xl font-bold text-emerald-600 mb-2 group-hover:scale-110 transition-transform">
+                  6
+                </div>
+                <div className="text-sm text-gray-600">Causes Supported</div>
+              </div>
+              <div className="group cursor-pointer">
+                <div className="text-4xl font-bold text-emerald-600 mb-2 group-hover:scale-110 transition-transform">
+                  24/7
+                </div>
+                <div className="text-sm text-gray-600">Support</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
         {/* Stats Section - Similar to DonateKart */}
-        <section className="py-12 bg-white/80 backdrop-blur-sm">
+        <section className="py-12 bg-white/80 backdrop-blur-sm d-none">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
               <div className="group cursor-pointer">
@@ -347,118 +494,6 @@ export default function Home() {
                 </div>
               </div>
             </div>
-          </div>
-        </section>
-
-        {/* Active Campaigns Section */}
-        <section className="py-16 bg-gray-50">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center mb-12">
-              <h3 className="text-3xl font-bold text-gray-900 mb-4">Active Campaigns</h3>
-              <p className="text-lg text-gray-600">Support these ongoing initiatives and help reach their goals</p>
-            </div>
-
-            {loading ? (
-              <div className="text-center py-12">
-                <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-600"></div>
-                <p className="mt-4 text-gray-600">Loading campaigns...</p>
-              </div>
-            ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {campaigns.map((campaign) => {
-                  const progress = campaign.goalAmount > 0 
-                    ? (campaign.totalDonations / campaign.goalAmount) * 100 
-                    : 0;
-
-                  return (
-                    <div
-                      key={campaign.tokenId}
-                      className="bg-white/90 backdrop-blur-sm rounded-xl border border-gray-200 overflow-hidden hover:shadow-xl hover:border-emerald-200 transition-all duration-300 transform hover:-translate-y-1"
-                    >
-                      <div className="p-6">
-                        {/* Demo Badge */}
-                        {campaign.isDemo && (
-                          <div className="mb-3 px-3 py-1 bg-blue-100 border border-blue-300 rounded-lg text-xs font-medium text-blue-700 inline-block">
-                            🎯 Demo Campaign - Try the Platform!
-                          </div>
-                        )}
-                        
-                        <div className="flex items-center justify-between mb-4">
-                          <span className={`px-3 py-1 rounded-full text-sm font-medium transition-all ${getCharityBadgeColor(campaign.charity)}`}>
-                            {campaign.charity}
-                          </span>
-                          <span className="text-xs text-gray-500">
-                            #{campaign.tokenId}
-                          </span>
-                        </div>
-
-                        <h3 className="text-lg font-semibold text-gray-900 mb-2 group-hover:text-emerald-600 transition-colors">
-                          {campaign.isDemo ? campaign.demoInfo.name : `Campaign by ${campaign.owner.slice(0, 6)}...${campaign.owner.slice(-4)}`}
-                        </h3>
-
-                        {campaign.isDemo && (
-                          <p className="text-sm text-gray-600 mb-4">
-                            {campaign.demoInfo.description}
-                          </p>
-                        )}
-
-                        <div className="space-y-2 mb-4">
-                          <div className="flex justify-between text-sm group">
-                            <span className="text-gray-600">Raised</span>
-                            <span className="font-semibold text-gray-900 group-hover:text-emerald-600 transition-colors">
-                              {campaign.totalDonations.toFixed(4)} ETH
-                            </span>
-                          </div>
-                          <div className="flex justify-between text-sm group">
-                            <span className="text-gray-600">Goal</span>
-                            <span className="font-semibold text-gray-900 group-hover:text-emerald-600 transition-colors">
-                              {campaign.goalAmount.toFixed(4)} ETH
-                            </span>
-                          </div>
-                        </div>
-
-                        <div className="mb-4">
-                          <div className="flex justify-between text-sm mb-2">
-                            <span className="text-gray-600">Progress</span>
-                            <span className="font-semibold text-emerald-600">
-                              {Math.min(progress, 100).toFixed(1)}%
-                            </span>
-                          </div>
-                          <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
-                            <div
-                              className="h-full bg-emerald-500 transition-all duration-500 hover:bg-emerald-600"
-                              style={{ width: `${Math.min(progress, 100)}%` }}
-                            />
-                          </div>
-                        </div>
-
-                        {campaign.isDemo ? (
-                          <div className="space-y-2">
-                            <button
-                              onClick={() => alert('This is a demo campaign!\n\nTo test real donations:\n1. Create your own campaign\n2. Or wait for other users to create campaigns\n\nDemo campaigns help you see how the platform works!')}
-                              className="w-full px-6 py-3 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-all transform hover:scale-105 min-h-[44px]"
-                            >
-                              Try Demo (Info Only)
-                            </button>
-                            <Link href="/create-campaign">
-                              <button className="w-full px-6 py-3 bg-emerald-600 text-white rounded-lg font-medium hover:bg-emerald-700 transition-all transform hover:scale-105 min-h-[44px]">
-                                Create Real Campaign
-                              </button>
-                            </Link>
-                          </div>
-                        ) : (
-                          <Link href={`/campaign/${campaign.tokenId}`}>
-                            <button className="w-full px-6 py-3 bg-emerald-600 text-white rounded-lg font-medium hover:bg-emerald-700 transition-all transform hover:scale-105 active:scale-95 min-h-[44px]">
-                              View Campaign
-                            </button>
-                          </Link>
-                        )}
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            )}
           </div>
         </section>
 
