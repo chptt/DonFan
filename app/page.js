@@ -26,7 +26,6 @@ export default function Home() {
 
   const loadCampaigns = async () => {
     try {
-      // Priority: 1. Connected provider, 2. Window.ethereum, 3. Public RPC
       let tempProvider;
       
       if (provider) {
@@ -37,18 +36,16 @@ export default function Home() {
         tempProvider = new ethers.BrowserProvider(window.ethereum);
       } else {
         console.log('Using public RPC');
-        // Use multiple fallback RPCs for better reliability
         const rpcUrls = [
           'https://ethereum-sepolia.publicnode.com',
           'https://rpc.sepolia.org',
           'https://sepolia.gateway.tenderly.co'
         ];
         
-        // Try each RPC until one works
         for (const rpcUrl of rpcUrls) {
           try {
             tempProvider = new ethers.JsonRpcProvider(rpcUrl);
-            await tempProvider.getBlockNumber(); // Test connection
+            await tempProvider.getBlockNumber();
             console.log('Connected to RPC:', rpcUrl);
             break;
           } catch (err) {
@@ -75,17 +72,16 @@ export default function Home() {
           const influencer = await contract.influencers(i);
           const owner = await contract.ownerOf(i);
           
-          // New contract returns: [charity, totalDonations, goalAmount, active, creator, influencerName, profileImageUrl]
           campaignData.push({
             tokenId: i,
             owner,
-            charity: CHARITY_TYPES[influencer[0]], // charity is index 0
-            totalDonations: parseFloat(formatEther(influencer[1])), // totalDonations is index 1
-            goalAmount: parseFloat(formatEther(influencer[2])), // goalAmount is index 2
-            active: influencer[3], // active is index 3
-            creator: influencer[4], // creator is index 4
-            influencerName: influencer[5] || `${owner.slice(0, 6)}...${owner.slice(-4)}`, // influencerName is index 5
-            profileImageUrl: influencer[6] || '', // profileImageUrl is index 6
+            charity: CHARITY_TYPES[influencer[0]],
+            totalDonations: parseFloat(formatEther(influencer[1])),
+            goalAmount: parseFloat(formatEther(influencer[2])),
+            active: influencer[3],
+            creator: influencer[4],
+            influencerName: influencer[5] || `${owner.slice(0, 6)}...${owner.slice(-4)}`,
+            profileImageUrl: influencer[6] || '',
             isDemo: false
           });
         } catch (error) {
@@ -160,9 +156,7 @@ export default function Home() {
       </header>
 
       <main>
-        {/* Hero Section */}
         <section className="bg-gradient-to-b from-emerald-50/50 to-transparent py-16 sm:py-24 relative overflow-hidden">
-          {/* Decorative elements */}
           <div className="absolute top-10 left-10 w-20 h-20 bg-emerald-200/30 rounded-full blur-2xl"></div>
           <div className="absolute bottom-10 right-10 w-32 h-32 bg-blue-200/30 rounded-full blur-2xl"></div>
           
@@ -178,7 +172,6 @@ export default function Home() {
                 Join influencers and their communities in making a real difference. Every donation is tracked transparently, so you can see exactly how your contribution helps.
               </p>
               
-              {/* Show Connect Wallet CTA if not connected */}
               {!account && (
                 <div className="mb-8">
                   <WalletConnectButton onConnect={handleWalletConnect} />
@@ -215,7 +208,6 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Active Campaigns Section - MOVED UP */}
         <section className="py-16 bg-white">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-12">
@@ -266,7 +258,6 @@ export default function Home() {
                       className="bg-white rounded-xl border-2 border-gray-200 overflow-hidden hover:shadow-2xl hover:border-emerald-300 transition-all duration-300 transform hover:-translate-y-2"
                     >
                       <div className="p-6">
-                        {/* Influencer Info with Avatar */}
                         <div className="flex items-center space-x-3 mb-4">
                           <InfluencerAvatar 
                             name={campaign.influencerName} 

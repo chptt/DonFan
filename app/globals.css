@@ -6,7 +6,6 @@ body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
 }
 
-/* Animated background pattern */
 .charity-background {
   background-color: #f9fafb;
   background-image: 
@@ -26,7 +25,6 @@ body {
   }
 }
 
-/* Floating hearts animation */
 .floating-hearts {
   position: fixed;
   top: 0;
@@ -78,9 +76,7 @@ body {
   }
 }
 
-/* Subtle pattern overlay */
 .pattern-overlay {
   background-image: 
     repeating-linear-gradient(45deg, transparent, transparent 35px, rgba(16, 185, 129, 0.02) 35px, rgba(16, 185, 129, 0.02) 70px);
 }
-
