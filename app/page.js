@@ -14,7 +14,7 @@ export default function Home() {
 
   useEffect(() => {
     loadCampaigns();
-  }, []);
+  }, [provider]); // Reload when provider changes
 
   const handleWalletConnect = (p, s, a) => {
     setProvider(p);
@@ -24,8 +24,18 @@ export default function Home() {
 
   const loadCampaigns = async () => {
     try {
-      // Use Infura public Sepolia RPC endpoint (supports CORS)
-      const tempProvider = new ethers.JsonRpcProvider('https://sepolia.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161');
+      // When wallet is connected, use MetaMask provider, otherwise use window.ethereum if available
+      let tempProvider;
+      
+      if (provider) {
+        tempProvider = provider;
+      } else if (typeof window !== 'undefined' && window.ethereum) {
+        tempProvider = new ethers.BrowserProvider(window.ethereum);
+      } else {
+        // Fallback: Use Cloudflare's public Ethereum gateway
+        tempProvider = new ethers.JsonRpcProvider('https://ethereum-sepolia.publicnode.com');
+      }
+      
       const contract = getContract(tempProvider);
       
       console.log('Loading campaigns from contract:', CONTRACT_ADDRESS);
