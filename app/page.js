@@ -69,44 +69,14 @@ export default function Home() {
 
       console.log('Loaded campaigns:', campaignData);
 
-      // Add demo campaign if no real campaigns exist
-      if (campaignData.length === 0) {
-        console.log('No real campaigns found, adding demo campaign');
-        campaignData.push({
-          tokenId: 'demo',
-          owner: '0x0000000000000000000000000000000000000000',
-          charity: 'Housing',
-          totalDonations: 0.0234,
-          goalAmount: 1.0,
-          active: true,
-          isDemo: true,
-          demoInfo: {
-            name: 'Demo Campaign',
-            description: 'This is a demo campaign. Create a real campaign to get started!'
-          }
-        });
-      }
-
       setCampaigns(campaignData);
     } catch (error) {
       console.error('Error loading campaigns:', error);
       console.error('Error details:', error.message);
       console.error('Error stack:', error.stack);
       
-      // Show demo campaign on error
-      setCampaigns([{
-        tokenId: 'demo',
-        owner: '0x0000000000000000000000000000000000000000',
-        charity: 'Housing',
-        totalDonations: 0.0234,
-        goalAmount: 1.0,
-        active: true,
-        isDemo: true,
-        demoInfo: {
-          name: 'Demo Campaign',
-          description: 'This is a demo campaign. Create a real campaign to get started!'
-        }
-      }]);
+      // Show empty state on error
+      setCampaigns([]);
     } finally {
       setLoading(false);
     }
@@ -234,6 +204,19 @@ export default function Home() {
                 <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-600"></div>
                 <p className="mt-4 text-gray-600">Loading campaigns...</p>
               </div>
+            ) : campaigns.length === 0 ? (
+              <div className="text-center py-16">
+                <div className="text-6xl mb-6">🎯</div>
+                <h3 className="text-2xl font-bold text-gray-900 mb-4">No Active Campaigns Yet</h3>
+                <p className="text-gray-600 mb-8 max-w-md mx-auto">
+                  Be the first to create a campaign and start making a difference!
+                </p>
+                <Link href="/create-campaign">
+                  <button className="px-8 py-4 bg-emerald-600 text-white rounded-lg font-bold hover:bg-emerald-700 transition-all transform hover:scale-105 shadow-lg">
+                    Create First Campaign 🚀
+                  </button>
+                </Link>
+              </div>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {campaigns.map((campaign) => {
@@ -247,29 +230,20 @@ export default function Home() {
                       className="bg-white rounded-xl border-2 border-gray-200 overflow-hidden hover:shadow-2xl hover:border-emerald-300 transition-all duration-300 transform hover:-translate-y-2"
                     >
                       <div className="p-6">
-                        {/* Demo Badge */}
-                        {campaign.isDemo && (
-                          <div className="mb-3 px-3 py-1 bg-blue-100 border border-blue-300 rounded-lg text-xs font-medium text-blue-700 inline-block">
-                            🎯 Demo Campaign - Try the Platform!
-                          </div>
-                        )}
-                        
                         {/* Influencer Info with Avatar */}
-                        {!campaign.isDemo && (
-                          <div className="flex items-center space-x-3 mb-4">
-                            <div className="w-12 h-12 rounded-full bg-gradient-to-br from-emerald-400 to-blue-500 flex items-center justify-center text-white font-bold text-lg shadow-md">
-                              {campaign.influencerName.charAt(0).toUpperCase()}
-                            </div>
-                            <div className="flex-1 min-w-0">
-                              <h3 className="text-lg font-semibold text-gray-900 truncate">
-                                {campaign.influencerName}
-                              </h3>
-                              <p className="text-xs text-gray-500 font-mono truncate">
-                                {campaign.owner.slice(0, 10)}...{campaign.owner.slice(-8)}
-                              </p>
-                            </div>
+                        <div className="flex items-center space-x-3 mb-4">
+                          <div className="w-12 h-12 rounded-full bg-gradient-to-br from-emerald-400 to-blue-500 flex items-center justify-center text-white font-bold text-lg shadow-md">
+                            {campaign.influencerName.charAt(0).toUpperCase()}
                           </div>
-                        )}
+                          <div className="flex-1 min-w-0">
+                            <h3 className="text-lg font-semibold text-gray-900 truncate">
+                              {campaign.influencerName}
+                            </h3>
+                            <p className="text-xs text-gray-500 font-mono truncate">
+                              {campaign.owner.slice(0, 10)}...{campaign.owner.slice(-8)}
+                            </p>
+                          </div>
+                        </div>
                         
                         <div className="flex items-center justify-between mb-4">
                           <span className={`px-3 py-1 rounded-full text-sm font-medium transition-all ${getCharityBadgeColor(campaign.charity)}`}>
@@ -279,17 +253,6 @@ export default function Home() {
                             #{campaign.tokenId}
                           </span>
                         </div>
-
-                        {campaign.isDemo && (
-                          <>
-                            <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                              {campaign.demoInfo.name}
-                            </h3>
-                            <p className="text-sm text-gray-600 mb-4">
-                              {campaign.demoInfo.description}
-                            </p>
-                          </>
-                        )}
 
                         <div className="space-y-2 mb-4">
                           <div className="flex justify-between text-sm group">
@@ -321,27 +284,11 @@ export default function Home() {
                           </div>
                         </div>
 
-                        {campaign.isDemo ? (
-                          <div className="space-y-2">
-                            <button
-                              onClick={() => alert('This is a demo campaign!\n\nTo test real donations:\n1. Create your own campaign\n2. Or wait for other users to create campaigns\n\nDemo campaigns help you see how the platform works!')}
-                              className="w-full px-6 py-3 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-all transform hover:scale-105 min-h-[44px]"
-                            >
-                              Try Demo (Info Only)
-                            </button>
-                            <Link href="/create-campaign">
-                              <button className="w-full px-6 py-3 bg-emerald-600 text-white rounded-lg font-medium hover:bg-emerald-700 transition-all transform hover:scale-105 min-h-[44px]">
-                                Create Real Campaign
-                              </button>
-                            </Link>
-                          </div>
-                        ) : (
-                          <Link href={`/campaign/${campaign.tokenId}`}>
-                            <button className="w-full px-6 py-3 bg-emerald-600 text-white rounded-lg font-medium hover:bg-emerald-700 transition-all transform hover:scale-105 active:scale-95 min-h-[44px] shadow-lg hover:shadow-xl">
-                              View & Donate →
-                            </button>
-                          </Link>
-                        )}
+                        <Link href={`/campaign/${campaign.tokenId}`}>
+                          <button className="w-full px-6 py-3 bg-emerald-600 text-white rounded-lg font-medium hover:bg-emerald-700 transition-all transform hover:scale-105 active:scale-95 min-h-[44px] shadow-lg hover:shadow-xl">
+                            View & Donate →
+                          </button>
+                        </Link>
                       </div>
                     </div>
                   );
@@ -357,9 +304,9 @@ export default function Home() {
             <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
               <div className="group cursor-pointer">
                 <div className="text-4xl font-bold text-emerald-600 mb-2 group-hover:scale-110 transition-transform">
-                  {campaigns.filter(c => !c.isDemo).length}+
+                  {campaigns.length}+
                 </div>
-                <div className="text-sm text-gray-600">Real Campaigns</div>
+                <div className="text-sm text-gray-600">Active Campaigns</div>
               </div>
               <div className="group cursor-pointer">
                 <div className="text-4xl font-bold text-emerald-600 mb-2 group-hover:scale-110 transition-transform">
