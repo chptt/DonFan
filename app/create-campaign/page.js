@@ -17,7 +17,8 @@ export default function CreateCampaign() {
   const [formData, setFormData] = useState({
     charityType: '0',
     goalAmount: '',
-    influencerName: ''
+    influencerName: '',
+    profileImageUrl: ''
   });
 
   useEffect(() => {
@@ -68,7 +69,8 @@ export default function CreateCampaign() {
       const tx = await contractWithSigner.mintMyNFT(
         parseInt(formData.charityType),
         parseEther(formData.goalAmount),
-        formData.influencerName.trim()
+        formData.influencerName.trim(),
+        formData.profileImageUrl.trim()
       );
 
       await tx.wait();
@@ -167,6 +169,45 @@ export default function CreateCampaign() {
                 <p className="text-sm text-gray-500 mt-1">
                   This name will be displayed to donors (max 50 characters)
                 </p>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Profile Picture URL (Optional)
+                </label>
+                <input
+                  type="url"
+                  name="profileImageUrl"
+                  value={formData.profileImageUrl}
+                  onChange={handleInputChange}
+                  placeholder="https://example.com/your-photo.jpg or ipfs://..."
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                />
+                <div className="mt-2 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                  <p className="text-sm text-blue-800 mb-2">
+                    💡 <strong>Recommended:</strong> Upload to IPFS for permanent, tamper-proof storage
+                  </p>
+                  <p className="text-xs text-blue-700">
+                    Free IPFS services: <a href="https://www.pinata.cloud/" target="_blank" rel="noopener noreferrer" className="underline hover:text-blue-900">Pinata</a>, <a href="https://nft.storage/" target="_blank" rel="noopener noreferrer" className="underline hover:text-blue-900">NFT.Storage</a>, <a href="https://web3.storage/" target="_blank" rel="noopener noreferrer" className="underline hover:text-blue-900">Web3.Storage</a>
+                  </p>
+                </div>
+                {formData.profileImageUrl && (
+                  <div className="mt-3 flex items-center space-x-3">
+                    <div className="text-sm text-gray-600">Preview:</div>
+                    <img 
+                      src={formData.profileImageUrl} 
+                      alt="Preview" 
+                      className="w-12 h-12 rounded-full object-cover border-2 border-gray-200"
+                      onError={(e) => {
+                        e.target.style.display = 'none';
+                        e.target.nextSibling.style.display = 'block';
+                      }}
+                    />
+                    <div className="w-12 h-12 rounded-full bg-gradient-to-br from-emerald-400 to-blue-500 flex items-center justify-center text-white font-bold text-lg" style={{display: 'none'}}>
+                      {formData.influencerName.charAt(0).toUpperCase() || '?'}
+                    </div>
+                  </div>
+                )}
               </div>
 
               <div>

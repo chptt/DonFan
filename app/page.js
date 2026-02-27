@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { ethers } from 'ethers';
 import Link from 'next/link';
 import WalletConnectButton from '@/components/WalletConnectButton';
+import InfluencerAvatar from '@/components/InfluencerAvatar';
 import { getContract, CHARITY_TYPES, formatEther, CONTRACT_ADDRESS } from '@/lib/contract';
 
 export default function Home() {
@@ -50,7 +51,7 @@ export default function Home() {
           const influencer = await contract.influencers(i);
           const owner = await contract.ownerOf(i);
           
-          // New contract returns: [charity, totalDonations, goalAmount, active, creator, influencerName]
+          // New contract returns: [charity, totalDonations, goalAmount, active, creator, influencerName, profileImageUrl]
           campaignData.push({
             tokenId: i,
             owner,
@@ -60,6 +61,7 @@ export default function Home() {
             active: influencer[3], // active is index 3
             creator: influencer[4], // creator is index 4
             influencerName: influencer[5] || `${owner.slice(0, 6)}...${owner.slice(-4)}`, // influencerName is index 5
+            profileImageUrl: influencer[6] || '', // profileImageUrl is index 6
             isDemo: false
           });
         } catch (error) {
@@ -232,9 +234,11 @@ export default function Home() {
                       <div className="p-6">
                         {/* Influencer Info with Avatar */}
                         <div className="flex items-center space-x-3 mb-4">
-                          <div className="w-12 h-12 rounded-full bg-gradient-to-br from-emerald-400 to-blue-500 flex items-center justify-center text-white font-bold text-lg shadow-md">
-                            {campaign.influencerName.charAt(0).toUpperCase()}
-                          </div>
+                          <InfluencerAvatar 
+                            name={campaign.influencerName} 
+                            imageUrl={campaign.profileImageUrl}
+                            size="md"
+                          />
                           <div className="flex-1 min-w-0">
                             <h3 className="text-lg font-semibold text-gray-900 truncate">
                               {campaign.influencerName}

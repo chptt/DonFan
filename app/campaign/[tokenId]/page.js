@@ -11,6 +11,7 @@ import MealsVisual from '@/components/CharityVisual/MealsVisual';
 import MedicalVisual from '@/components/CharityVisual/MedicalVisual';
 import EducationVisual from '@/components/CharityVisual/EducationVisual';
 import RiverVisual from '@/components/CharityVisual/RiverVisual';
+import InfluencerAvatar from '@/components/InfluencerAvatar';
 import { getContract, CHARITY_TYPES, formatEther } from '@/lib/contract';
 
 export default function CampaignPage() {
