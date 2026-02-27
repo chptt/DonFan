@@ -4,6 +4,7 @@ import { ethers } from 'ethers';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import WalletConnectButton from '@/components/WalletConnectButton';
+import InfluencerAvatar from '@/components/InfluencerAvatar';
 import { getContract, CHARITY_TYPES, formatEther } from '@/lib/contract';
 
 export default function MyContributions() {
@@ -69,7 +70,7 @@ export default function MyContributions() {
             const influencer = await contract.influencers(tokenId);
             const owner = await contract.ownerOf(tokenId);
             
-            // New contract returns: [charity, totalDonations, goalAmount, active, creator, influencerName]
+            // New contract returns: [charity, totalDonations, goalAmount, active, creator, influencerName, profileImageUrl]
             return {
               tokenId: tokenId.toString(),
               amount,
@@ -79,7 +80,8 @@ export default function MyContributions() {
               campaignOwner: owner,
               goalAmount: parseFloat(formatEther(influencer[2])), // goalAmount is index 2
               totalDonations: parseFloat(formatEther(influencer[1])), // totalDonations is index 1
-              influencerName: influencer[5] || `${owner.slice(0, 6)}...${owner.slice(-4)}` // influencerName is index 5
+              influencerName: influencer[5] || `${owner.slice(0, 6)}...${owner.slice(-4)}`, // influencerName is index 5
+              profileImageUrl: influencer[6] || '' // profileImageUrl is index 6
             };
           } catch (error) {
             console.error(`Error loading campaign ${tokenId}:`, error);
@@ -367,9 +369,11 @@ export default function MyContributions() {
                         </div>
                         
                         <div className="flex items-center space-x-2 mb-2">
-                          <div className="w-8 h-8 rounded-full bg-gradient-to-br from-emerald-400 to-blue-500 flex items-center justify-center text-white font-bold text-sm">
-                            {contribution.influencerName.charAt(0).toUpperCase()}
-                          </div>
+                          <InfluencerAvatar 
+                            name={contribution.influencerName} 
+                            imageUrl={contribution.profileImageUrl}
+                            size="sm"
+                          />
                           <p className="text-sm font-medium text-gray-700">
                             {contribution.influencerName}
                           </p>

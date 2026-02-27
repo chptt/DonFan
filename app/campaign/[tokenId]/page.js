@@ -47,7 +47,7 @@ export default function CampaignPage() {
       const influencer = await contract.influencers(tokenId);
       const owner = await contract.ownerOf(tokenId);
       
-      // New contract returns: [charity, totalDonations, goalAmount, active, creator, influencerName]
+      // New contract returns: [charity, totalDonations, goalAmount, active, creator, influencerName, profileImageUrl]
       setCampaign({
         tokenId,
         owner,
@@ -56,7 +56,8 @@ export default function CampaignPage() {
         goalAmount: parseFloat(formatEther(influencer[2])), // goalAmount is index 2
         active: influencer[3], // active is index 3
         creator: influencer[4], // creator is index 4
-        influencerName: influencer[5] || `${owner.slice(0, 6)}...${owner.slice(-4)}` // influencerName is index 5
+        influencerName: influencer[5] || `${owner.slice(0, 6)}...${owner.slice(-4)}`, // influencerName is index 5
+        profileImageUrl: influencer[6] || '' // profileImageUrl is index 6
       });
     } catch (error) {
       console.error('Error loading campaign:', error);
@@ -156,9 +157,11 @@ export default function CampaignPage() {
             <div className="bg-white/90 backdrop-blur-sm rounded-xl border border-gray-200 p-6 hover:shadow-lg transition-shadow">
               {/* Influencer Info */}
               <div className="flex items-center space-x-4 mb-6 pb-6 border-b border-gray-200">
-                <div className="w-16 h-16 rounded-full bg-gradient-to-br from-emerald-400 to-blue-500 flex items-center justify-center text-white font-bold text-2xl shadow-lg">
-                  {campaign.influencerName.charAt(0).toUpperCase()}
-                </div>
+                <InfluencerAvatar 
+                  name={campaign.influencerName} 
+                  imageUrl={campaign.profileImageUrl}
+                  size="lg"
+                />
                 <div className="flex-1 min-w-0">
                   <h3 className="text-xl font-bold text-gray-900 mb-1">
                     {campaign.influencerName}
