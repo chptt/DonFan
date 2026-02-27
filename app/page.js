@@ -50,7 +50,7 @@ export default function Home() {
           const influencer = await contract.influencers(i);
           const owner = await contract.ownerOf(i);
           
-          // New contract returns: [charity, totalDonations, goalAmount, active, creator]
+          // New contract returns: [charity, totalDonations, goalAmount, active, creator, influencerName]
           campaignData.push({
             tokenId: i,
             owner,
@@ -59,6 +59,7 @@ export default function Home() {
             goalAmount: parseFloat(formatEther(influencer[2])), // goalAmount is index 2
             active: influencer[3], // active is index 3
             creator: influencer[4], // creator is index 4
+            influencerName: influencer[5] || `${owner.slice(0, 6)}...${owner.slice(-4)}`, // influencerName is index 5
             isDemo: false
           });
         } catch (error) {
@@ -253,6 +254,23 @@ export default function Home() {
                           </div>
                         )}
                         
+                        {/* Influencer Info with Avatar */}
+                        {!campaign.isDemo && (
+                          <div className="flex items-center space-x-3 mb-4">
+                            <div className="w-12 h-12 rounded-full bg-gradient-to-br from-emerald-400 to-blue-500 flex items-center justify-center text-white font-bold text-lg shadow-md">
+                              {campaign.influencerName.charAt(0).toUpperCase()}
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <h3 className="text-lg font-semibold text-gray-900 truncate">
+                                {campaign.influencerName}
+                              </h3>
+                              <p className="text-xs text-gray-500 font-mono truncate">
+                                {campaign.owner.slice(0, 10)}...{campaign.owner.slice(-8)}
+                              </p>
+                            </div>
+                          </div>
+                        )}
+                        
                         <div className="flex items-center justify-between mb-4">
                           <span className={`px-3 py-1 rounded-full text-sm font-medium transition-all ${getCharityBadgeColor(campaign.charity)}`}>
                             {campaign.charity}
@@ -262,14 +280,15 @@ export default function Home() {
                           </span>
                         </div>
 
-                        <h3 className="text-lg font-semibold text-gray-900 mb-2 group-hover:text-emerald-600 transition-colors">
-                          {campaign.isDemo ? campaign.demoInfo.name : `Campaign by ${campaign.owner.slice(0, 6)}...${campaign.owner.slice(-4)}`}
-                        </h3>
-
                         {campaign.isDemo && (
-                          <p className="text-sm text-gray-600 mb-4">
-                            {campaign.demoInfo.description}
-                          </p>
+                          <>
+                            <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                              {campaign.demoInfo.name}
+                            </h3>
+                            <p className="text-sm text-gray-600 mb-4">
+                              {campaign.demoInfo.description}
+                            </p>
+                          </>
                         )}
 
                         <div className="space-y-2 mb-4">

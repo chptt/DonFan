@@ -46,7 +46,7 @@ export default function CampaignPage() {
       const influencer = await contract.influencers(tokenId);
       const owner = await contract.ownerOf(tokenId);
       
-      // New contract returns: [charity, totalDonations, goalAmount, active, creator]
+      // New contract returns: [charity, totalDonations, goalAmount, active, creator, influencerName]
       setCampaign({
         tokenId,
         owner,
@@ -54,7 +54,8 @@ export default function CampaignPage() {
         totalDonations: parseFloat(formatEther(influencer[1])), // totalDonations is index 1
         goalAmount: parseFloat(formatEther(influencer[2])), // goalAmount is index 2
         active: influencer[3], // active is index 3
-        creator: influencer[4] // creator is index 4
+        creator: influencer[4], // creator is index 4
+        influencerName: influencer[5] || `${owner.slice(0, 6)}...${owner.slice(-4)}` // influencerName is index 5
       });
     } catch (error) {
       console.error('Error loading campaign:', error);
@@ -152,20 +153,28 @@ export default function CampaignPage() {
           {/* Left Column - Campaign Info */}
           <div className="space-y-6">
             <div className="bg-white/90 backdrop-blur-sm rounded-xl border border-gray-200 p-6 hover:shadow-lg transition-shadow">
+              {/* Influencer Info */}
+              <div className="flex items-center space-x-4 mb-6 pb-6 border-b border-gray-200">
+                <div className="w-16 h-16 rounded-full bg-gradient-to-br from-emerald-400 to-blue-500 flex items-center justify-center text-white font-bold text-2xl shadow-lg">
+                  {campaign.influencerName.charAt(0).toUpperCase()}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <h3 className="text-xl font-bold text-gray-900 mb-1">
+                    {campaign.influencerName}
+                  </h3>
+                  <p className="text-sm text-gray-500 font-mono truncate">
+                    {campaign.owner}
+                  </p>
+                </div>
+              </div>
+              
               <div className="flex items-center justify-between mb-4">
-                <h2 className="text-3xl font-bold text-gray-900">
+                <h2 className="text-2xl font-bold text-gray-900">
                   {campaign.charity} Campaign
                 </h2>
                 <span className="px-3 py-1 bg-emerald-50 text-emerald-700 border border-emerald-200 rounded-full text-sm font-medium">
                   Active
                 </span>
-              </div>
-
-              <div className="mb-6 group">
-                <p className="text-sm text-gray-600 mb-1">Influencer Address</p>
-                <p className="text-base font-mono text-gray-900 break-all group-hover:text-emerald-600 transition-colors">
-                  {campaign.owner}
-                </p>
               </div>
 
               <ProgressStats

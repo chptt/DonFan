@@ -52,7 +52,7 @@ export default function Dashboard() {
       const influencer = await contract.influencers(tokenId);
       const owner = await contract.ownerOf(tokenId);
       
-      // New contract returns: [charity, totalDonations, goalAmount, active, creator]
+      // New contract returns: [charity, totalDonations, goalAmount, active, creator, influencerName]
       const campaignData = {
         tokenId: tokenId.toString(),
         owner,
@@ -60,7 +60,8 @@ export default function Dashboard() {
         totalDonations: parseFloat(formatEther(influencer[1])), // totalDonations is index 1
         goalAmount: parseFloat(formatEther(influencer[2])), // goalAmount is index 2
         active: influencer[3], // active is index 3
-        creator: influencer[4] // creator is index 4
+        creator: influencer[4], // creator is index 4
+        influencerName: influencer[5] || `${owner.slice(0, 6)}...${owner.slice(-4)}` // influencerName is index 5
       };
       
       setCampaign(campaignData);

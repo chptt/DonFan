@@ -69,7 +69,7 @@ export default function MyContributions() {
             const influencer = await contract.influencers(tokenId);
             const owner = await contract.ownerOf(tokenId);
             
-            // New contract returns: [charity, totalDonations, goalAmount, active, creator]
+            // New contract returns: [charity, totalDonations, goalAmount, active, creator, influencerName]
             return {
               tokenId: tokenId.toString(),
               amount,
@@ -78,7 +78,8 @@ export default function MyContributions() {
               charity: CHARITY_TYPES[influencer[0]], // charity is index 0
               campaignOwner: owner,
               goalAmount: parseFloat(formatEther(influencer[2])), // goalAmount is index 2
-              totalDonations: parseFloat(formatEther(influencer[1])) // totalDonations is index 1
+              totalDonations: parseFloat(formatEther(influencer[1])), // totalDonations is index 1
+              influencerName: influencer[5] || `${owner.slice(0, 6)}...${owner.slice(-4)}` // influencerName is index 5
             };
           } catch (error) {
             console.error(`Error loading campaign ${tokenId}:`, error);
@@ -365,8 +366,17 @@ export default function MyContributions() {
                           </span>
                         </div>
                         
-                        <p className="text-sm text-gray-600 mb-2">
-                          By {contribution.campaignOwner.slice(0, 6)}...{contribution.campaignOwner.slice(-4)}
+                        <div className="flex items-center space-x-2 mb-2">
+                          <div className="w-8 h-8 rounded-full bg-gradient-to-br from-emerald-400 to-blue-500 flex items-center justify-center text-white font-bold text-sm">
+                            {contribution.influencerName.charAt(0).toUpperCase()}
+                          </div>
+                          <p className="text-sm font-medium text-gray-700">
+                            {contribution.influencerName}
+                          </p>
+                        </div>
+                        
+                        <p className="text-xs text-gray-500 font-mono mb-2">
+                          {contribution.campaignOwner.slice(0, 10)}...{contribution.campaignOwner.slice(-8)}
                         </p>
                         
                         <div className="flex items-center space-x-4 text-sm text-gray-500">

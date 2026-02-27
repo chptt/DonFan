@@ -17,8 +17,7 @@ export default function CreateCampaign() {
   const [formData, setFormData] = useState({
     charityType: '0',
     goalAmount: '',
-    campaignName: '',
-    description: ''
+    influencerName: ''
   });
 
   useEffect(() => {
@@ -51,8 +50,13 @@ export default function CreateCampaign() {
       return;
     }
 
-    if (!formData.campaignName) {
-      alert('Please enter a campaign name');
+    if (!formData.influencerName || formData.influencerName.trim().length === 0) {
+      alert('Please enter your name or influencer name');
+      return;
+    }
+
+    if (formData.influencerName.length > 50) {
+      alert('Name is too long (max 50 characters)');
       return;
     }
 
@@ -63,7 +67,8 @@ export default function CreateCampaign() {
       
       const tx = await contractWithSigner.mintMyNFT(
         parseInt(formData.charityType),
-        parseEther(formData.goalAmount)
+        parseEther(formData.goalAmount),
+        formData.influencerName.trim()
       );
 
       await tx.wait();
@@ -146,6 +151,25 @@ export default function CreateCampaign() {
               </div>
 
               <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Your Name / Influencer Name
+                </label>
+                <input
+                  type="text"
+                  name="influencerName"
+                  value={formData.influencerName}
+                  onChange={handleInputChange}
+                  maxLength="50"
+                  placeholder="Enter your name (e.g., John Doe, @username)"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                  required
+                />
+                <p className="text-sm text-gray-500 mt-1">
+                  This name will be displayed to donors (max 50 characters)
+                </p>
+              </div>
+
+              <div>
                 <label className="block text-sm font-medium text-gray-700 mb-3">
                   Select Charity Type
                 </label>
@@ -185,20 +209,6 @@ export default function CreateCampaign() {
                 </p>
               </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Campaign Description (Optional)
-                </label>
-                <textarea
-                  name="description"
-                  value={formData.description}
-                  onChange={handleInputChange}
-                  rows="4"
-                  placeholder="Tell people about your cause and why it matters..."
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
-                />
-              </div>
-
               <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
                 <p className="text-blue-800 text-sm">
                   💡 Tip: You can create multiple campaigns and donate to your own campaigns to kickstart them!
@@ -207,7 +217,7 @@ export default function CreateCampaign() {
 
               <button
                 onClick={handleCreateCampaign}
-                disabled={loading || !formData.goalAmount || !formData.campaignName}
+                disabled={loading || !formData.goalAmount || !formData.influencerName}
                 className="w-full px-6 py-4 bg-emerald-600 text-white rounded-lg font-bold text-lg hover:bg-emerald-700 transition-all transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
               >
                 {loading ? 'Creating Campaign...' : 'Create Campaign 🚀'}

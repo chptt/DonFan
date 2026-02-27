@@ -13,6 +13,7 @@ contract InfluencerDonationNFT is ERC721, ReentrancyGuard {
         uint256 goalAmount;
         bool active;
         address creator;
+        string influencerName;
     }
     
     uint256 private _tokenIdCounter;
@@ -24,8 +25,10 @@ contract InfluencerDonationNFT is ERC721, ReentrancyGuard {
     
     constructor() ERC721("InfluencerDonationNFT", "IDNFT") {}
     
-    function mintMyNFT(CharityType _charity, uint256 _goalAmount) external {
+    function mintMyNFT(CharityType _charity, uint256 _goalAmount, string memory _influencerName) external {
         require(_goalAmount > 0, "Goal must be greater than 0");
+        require(bytes(_influencerName).length > 0, "Name cannot be empty");
+        require(bytes(_influencerName).length <= 50, "Name too long");
         
         uint256 tokenId = _tokenIdCounter++;
         _safeMint(msg.sender, tokenId);
@@ -35,7 +38,8 @@ contract InfluencerDonationNFT is ERC721, ReentrancyGuard {
             totalDonations: 0,
             goalAmount: _goalAmount,
             active: true,
-            creator: msg.sender
+            creator: msg.sender,
+            influencerName: _influencerName
         });
         
         emit NFTMinted(msg.sender, tokenId, _charity, _goalAmount);
