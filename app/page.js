@@ -26,22 +26,45 @@ export default function Home() {
 
   const loadCampaigns = async () => {
     try {
-      // When wallet is connected, use MetaMask provider, otherwise use window.ethereum if available
+      // Priority: 1. Connected provider, 2. Window.ethereum, 3. Public RPC
       let tempProvider;
       
       if (provider) {
+        console.log('Using connected provider');
         tempProvider = provider;
       } else if (typeof window !== 'undefined' && window.ethereum) {
+        console.log('Using window.ethereum');
         tempProvider = new ethers.BrowserProvider(window.ethereum);
       } else {
-        // Fallback: Use Cloudflare's public Ethereum gateway
-        tempProvider = new ethers.JsonRpcProvider('https://ethereum-sepolia.publicnode.com');
+        console.log('Using public RPC');
+        // Use multiple fallback RPCs for better reliability
+        const rpcUrls = [
+          'https://ethereum-sepolia.publicnode.com',
+          'https://rpc.sepolia.org',
+          'https://sepolia.gateway.tenderly.co'
+        ];
+        
+        // Try each RPC until one works
+        for (const rpcUrl of rpcUrls) {
+          try {
+            tempProvider = new ethers.JsonRpcProvider(rpcUrl);
+            await tempProvider.getBlockNumber(); // Test connection
+            console.log('Connected to RPC:', rpcUrl);
+            break;
+          } catch (err) {
+            console.log('Failed to connect to:', rpcUrl);
+            continue;
+          }
+        }
+        
+        if (!tempProvider) {
+          throw new Error('Could not connect to any RPC provider');
+        }
       }
       
       const contract = getContract(tempProvider);
       
       console.log('Loading campaigns from contract:', CONTRACT_ADDRESS);
-      console.log('Contract object:', contract);
       
       const totalNFTs = await contract.getTotalNFTs();
       console.log('Total NFTs:', totalNFTs.toString());
@@ -207,6 +230,7 @@ export default function Home() {
               <div className="text-center py-12">
                 <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-600"></div>
                 <p className="mt-4 text-gray-600">Loading campaigns...</p>
+                <p className="mt-2 text-sm text-gray-500">This may take a moment on mobile</p>
               </div>
             ) : campaigns.length === 0 ? (
               <div className="text-center py-16">
@@ -215,11 +239,19 @@ export default function Home() {
                 <p className="text-gray-600 mb-8 max-w-md mx-auto">
                   Be the first to create a campaign and start making a difference!
                 </p>
-                <Link href="/create-campaign">
-                  <button className="px-8 py-4 bg-emerald-600 text-white rounded-lg font-bold hover:bg-emerald-700 transition-all transform hover:scale-105 shadow-lg">
-                    Create First Campaign 🚀
+                <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                  <Link href="/create-campaign">
+                    <button className="px-8 py-4 bg-emerald-600 text-white rounded-lg font-bold hover:bg-emerald-700 transition-all transform hover:scale-105 shadow-lg">
+                      Create First Campaign 🚀
+                    </button>
+                  </Link>
+                  <button 
+                    onClick={loadCampaigns}
+                    className="px-8 py-4 bg-gray-100 text-gray-700 rounded-lg font-bold hover:bg-gray-200 transition-all"
+                  >
+                    Retry Loading
                   </button>
-                </Link>
+                </div>
               </div>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
