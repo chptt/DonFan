@@ -35,6 +35,8 @@ export default function MyContributions() {
   const loadContributions = async () => {
     setLoading(true);
     try {
+      console.log('Loading contributions for account:', account);
+      
       // When wallet is connected, use MetaMask provider, otherwise use window.ethereum if available
       let tempProvider;
       
@@ -49,11 +51,16 @@ export default function MyContributions() {
       
       const contract = getContract(tempProvider);
       
+      console.log('Contract address:', contract.target);
+      
       // Get all donation events where this wallet was the donor
       const donationFilter = contract.filters.DonationReceived(null, account);
       const donationEvents = await contract.queryFilter(donationFilter);
       
+      console.log('Found donation events:', donationEvents.length);
+      
       if (donationEvents.length === 0) {
+        console.log('No donations found for this account');
         setLoading(false);
         return;
       }
@@ -70,7 +77,13 @@ export default function MyContributions() {
             const influencer = await contract.influencers(tokenId);
             const owner = await contract.ownerOf(tokenId);
             
-            // New contract returns: [charity, totalDonations, goalAmount, active, creator, influencerName, profileImageUrl]
+            console.log(`Campaign ${tokenId} data:`, influencer);
+            
+            // Handle both old and new contract formats
+            // Old contract: [charity, totalDonations, goalAmount, active, creator]
+            // New contract: [charity, totalDonations, goalAmount, active, creator, influencerName, profileImageUrl]
+            const hasNewFields = influencer.length >= 7;
+            
             return {
               tokenId: tokenId.toString(),
               amount,
@@ -80,8 +93,8 @@ export default function MyContributions() {
               campaignOwner: owner,
               goalAmount: parseFloat(formatEther(influencer[2])), // goalAmount is index 2
               totalDonations: parseFloat(formatEther(influencer[1])), // totalDonations is index 1
-              influencerName: influencer[5] || `${owner.slice(0, 6)}...${owner.slice(-4)}`, // influencerName is index 5
-              profileImageUrl: influencer[6] || '' // profileImageUrl is index 6
+              influencerName: hasNewFields && influencer[5] ? influencer[5] : `${owner.slice(0, 6)}...${owner.slice(-4)}`, // influencerName is index 5
+              profileImageUrl: hasNewFields && influencer[6] ? influencer[6] : '' // profileImageUrl is index 6
             };
           } catch (error) {
             console.error(`Error loading campaign ${tokenId}:`, error);
@@ -95,6 +108,7 @@ export default function MyContributions() {
         .filter(c => c !== null)
         .sort((a, b) => b.timestamp - a.timestamp);
 
+      console.log('Valid contributions:', validContributions.length);
       setContributions(validContributions);
 
       // Calculate statistics
@@ -112,6 +126,8 @@ export default function MyContributions() {
 
     } catch (error) {
       console.error('Error loading contributions:', error);
+      console.error('Error details:', error.message);
+      console.error('Error stack:', error.stack);
     } finally {
       setLoading(false);
     }
