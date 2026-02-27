@@ -65,32 +65,18 @@ export default function CreateCampaign() {
       const reader = new FileReader();
       reader.onloadend = () => {
         setImagePreview(reader.result);
-      };
-      reader.readAsDataURL(file);
-
-      // Upload to imgbb (free image hosting)
-      const formData = new FormData();
-      formData.append('image', file);
-      
-      const response = await fetch('https://api.imgbb.com/1/upload?key=d2d92e2f51b0e8c5b8c5f8e5c5b8c5f8', {
-        method: 'POST',
-        body: formData
-      });
-
-      const data = await response.json();
-      
-      if (data.success) {
+        // For now, just use the base64 as the URL (works but large)
+        // In production, you'd upload to a service like Cloudinary, AWS S3, etc.
         setFormData(prev => ({
           ...prev,
-          profileImageUrl: data.data.url
+          profileImageUrl: reader.result
         }));
-        alert('Image uploaded successfully! ✅');
-      } else {
-        throw new Error('Upload failed');
-      }
+        alert('Image loaded! Note: For best results, paste an image link from your social media or photo hosting site.');
+      };
+      reader.readAsDataURL(file);
     } catch (error) {
       console.error('Image upload error:', error);
-      alert('Failed to upload image. You can paste an image link instead.');
+      alert('Failed to load image. Please paste an image link instead.');
     } finally {
       setUploadingImage(false);
     }
@@ -232,6 +218,23 @@ export default function CreateCampaign() {
                   Profile Picture (Optional)
                 </label>
                 
+                {/* Image Link Input */}
+                <div className="mb-3">
+                  <input
+                    type="url"
+                    name="profileImageUrl"
+                    value={formData.profileImageUrl.startsWith('data:') ? '' : formData.profileImageUrl}
+                    onChange={handleInputChange}
+                    placeholder="Paste your image link here (from Instagram, Twitter, etc.)"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                  />
+                  <p className="text-xs text-gray-500 mt-1">
+                    Right-click your profile picture → Copy image address → Paste here
+                  </p>
+                </div>
+
+                <div className="text-center text-gray-500 text-sm mb-3">OR</div>
+
                 {/* File Upload Button */}
                 <div className="mb-3">
                   <label className="cursor-pointer">
@@ -239,7 +242,7 @@ export default function CreateCampaign() {
                       {uploadingImage ? (
                         <div className="flex items-center space-x-2">
                           <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-emerald-600"></div>
-                          <span className="text-gray-600">Uploading...</span>
+                          <span className="text-gray-600">Loading...</span>
                         </div>
                       ) : (
                         <div className="flex items-center space-x-2">
@@ -259,7 +262,7 @@ export default function CreateCampaign() {
                     />
                   </label>
                   <p className="text-xs text-gray-500 mt-1 text-center">
-                    Max size: 5MB
+                    Max size: 5MB (Note: Image links work better)
                   </p>
                 </div>
 
