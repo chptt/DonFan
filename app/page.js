@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { ethers } from 'ethers';
 import Link from 'next/link';
 import WalletConnectButton from '@/components/WalletConnectButton';
-import { getContract, CHARITY_TYPES, formatEther } from '@/lib/contract';
+import { getContract, CHARITY_TYPES, formatEther, CONTRACT_ADDRESS } from '@/lib/contract';
 
 export default function Home() {
   const [provider, setProvider] = useState(null);
@@ -24,10 +24,13 @@ export default function Home() {
 
   const loadCampaigns = async () => {
     try {
-      const tempProvider = new ethers.JsonRpcProvider('https://sepolia.infura.io/v3/');
+      // Use public Sepolia RPC endpoint
+      const tempProvider = new ethers.JsonRpcProvider('https://rpc.sepolia.org');
       const contract = getContract(tempProvider);
       
+      console.log('Loading campaigns from contract:', CONTRACT_ADDRESS);
       const totalNFTs = await contract.getTotalNFTs();
+      console.log('Total NFTs:', totalNFTs.toString());
       const campaignData = [];
 
       for (let i = 0; i < totalNFTs; i++) {

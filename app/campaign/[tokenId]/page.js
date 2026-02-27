@@ -29,7 +29,8 @@ export default function CampaignPage() {
 
   const loadCampaign = async () => {
     try {
-      const tempProvider = new ethers.JsonRpcProvider('https://sepolia.infura.io/v3/');
+      // Use public Sepolia RPC endpoint
+      const tempProvider = new ethers.JsonRpcProvider('https://rpc.sepolia.org');
       const contract = getContract(tempProvider);
       
       const influencer = await contract.influencers(tokenId);
