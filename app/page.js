@@ -159,8 +159,11 @@ export default function Home() {
               {!account && (
                 <div className="mb-8">
                   <WalletConnectButton onConnect={handleWalletConnect} />
-                  <p className="text-sm text-gray-500 mt-3">
-                    Connect your wallet to create campaigns or view your contributions
+                  <p className="text-sm text-gray-500 mt-3 text-center">
+                    {typeof window !== 'undefined' && /iPhone|iPad|iPod|Android/i.test(navigator.userAgent) 
+                      ? 'Opens in MetaMask app to connect your wallet'
+                      : 'Connect your wallet to create campaigns or view your contributions'
+                    }
                   </p>
                 </div>
               )}

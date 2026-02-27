@@ -47,9 +47,22 @@ export default function WalletConnectButton({ onConnect }) {
   };
 
   const connectWallet = async () => {
+    // Check if we're on mobile
+    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+    
     if (typeof window.ethereum === 'undefined') {
-      alert('Please install MetaMask to use this app');
-      return;
+      if (isMobile) {
+        // On mobile, redirect to MetaMask app with deep link
+        const currentUrl = window.location.href;
+        const metamaskAppDeepLink = `https://metamask.app.link/dapp/${currentUrl.replace(/^https?:\/\//, '')}`;
+        window.location.href = metamaskAppDeepLink;
+        return;
+      } else {
+        // On desktop, show install message
+        alert('Please install MetaMask browser extension to use this app.\n\nVisit: https://metamask.io/download/');
+        window.open('https://metamask.io/download/', '_blank');
+        return;
+      }
     }
 
     setIsConnecting(true);
