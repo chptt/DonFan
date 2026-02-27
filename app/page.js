@@ -364,38 +364,6 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Stats Section - Similar to DonateKart */}
-        <section className="py-12 bg-white/80 backdrop-blur-sm d-none">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-              <div className="group cursor-pointer">
-                <div className="text-4xl font-bold text-emerald-600 mb-2 group-hover:scale-110 transition-transform">
-                  {campaigns.length}+
-                </div>
-                <div className="text-sm text-gray-600">Active Campaigns</div>
-              </div>
-              <div className="group cursor-pointer">
-                <div className="text-4xl font-bold text-emerald-600 mb-2 group-hover:scale-110 transition-transform">
-                  100%
-                </div>
-                <div className="text-sm text-gray-600">Transparent</div>
-              </div>
-              <div className="group cursor-pointer">
-                <div className="text-4xl font-bold text-emerald-600 mb-2 group-hover:scale-110 transition-transform">
-                  6
-                </div>
-                <div className="text-sm text-gray-600">Causes Supported</div>
-              </div>
-              <div className="group cursor-pointer">
-                <div className="text-4xl font-bold text-emerald-600 mb-2 group-hover:scale-110 transition-transform">
-                  24/7
-                </div>
-                <div className="text-sm text-gray-600">Support</div>
-              </div>
-            </div>
-          </div>
-        </section>
-
         {/* How It Works Section */}
         <section className="py-16 bg-gradient-to-b from-white to-gray-50">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
