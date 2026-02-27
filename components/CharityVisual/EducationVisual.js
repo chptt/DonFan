@@ -2,11 +2,12 @@
 import { motion } from 'framer-motion';
 
 export default function EducationVisual({ progressPercentage }) {
-  const showDesks = progressPercentage >= 25;
-  const showBooks = progressPercentage >= 50;
-  const showBoard = progressPercentage >= 50;
-  const showLaptop = progressPercentage >= 75;
-  const showLights = progressPercentage >= 100;
+  // Much lower thresholds - each milestone at ~0.025% intervals
+  const showDesks = progressPercentage >= 0.025;
+  const showBooks = progressPercentage >= 0.05;
+  const showBoard = progressPercentage >= 0.05;
+  const showLaptop = progressPercentage >= 0.075;
+  const showLights = progressPercentage >= 0.10;
 
   return (
     <svg viewBox="0 0 400 400" className="w-full h-auto">

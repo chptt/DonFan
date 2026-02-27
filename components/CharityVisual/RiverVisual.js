@@ -2,11 +2,12 @@
 import { motion } from 'framer-motion';
 
 export default function RiverVisual({ progressPercentage }) {
-  const trashRemoved = progressPercentage >= 20;
-  const cleanerWater = progressPercentage >= 40;
-  const showFish = progressPercentage >= 60;
-  const showTrees = progressPercentage >= 80;
-  const showFlow = progressPercentage >= 100;
+  // Much lower thresholds - each milestone at ~0.02% intervals
+  const trashRemoved = progressPercentage >= 0.02;
+  const cleanerWater = progressPercentage >= 0.04;
+  const showFish = progressPercentage >= 0.06;
+  const showTrees = progressPercentage >= 0.08;
+  const showFlow = progressPercentage >= 0.10;
 
   const waterColor = cleanerWater ? '#3B82F6' : '#6B7280';
 

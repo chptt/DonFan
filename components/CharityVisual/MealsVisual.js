@@ -2,10 +2,11 @@
 import { motion } from 'framer-motion';
 
 export default function MealsVisual({ progressPercentage }) {
-  const showRice = progressPercentage >= 25;
-  const showCurry = progressPercentage >= 50;
-  const showFull = progressPercentage >= 75;
-  const showSteam = progressPercentage >= 100;
+  // Much lower thresholds - each milestone at ~0.025% intervals
+  const showRice = progressPercentage >= 0.025;
+  const showCurry = progressPercentage >= 0.05;
+  const showFull = progressPercentage >= 0.075;
+  const showSteam = progressPercentage >= 0.10;
 
   return (
     <svg viewBox="0 0 400 400" className="w-full h-auto">

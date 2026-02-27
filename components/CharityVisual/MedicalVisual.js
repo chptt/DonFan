@@ -2,11 +2,12 @@
 import { motion } from 'framer-motion';
 
 export default function MedicalVisual({ progressPercentage }) {
-  const showBuilding = progressPercentage >= 25;
-  const showStructure = progressPercentage >= 50;
-  const showCross = progressPercentage >= 75;
-  const showAmbulance = progressPercentage >= 75;
-  const showGlow = progressPercentage >= 100;
+  // Much lower thresholds - each milestone at ~0.025% intervals
+  const showBuilding = progressPercentage >= 0.025;
+  const showStructure = progressPercentage >= 0.05;
+  const showCross = progressPercentage >= 0.075;
+  const showAmbulance = progressPercentage >= 0.075;
+  const showGlow = progressPercentage >= 0.10;
 
   return (
     <svg viewBox="0 0 400 400" className="w-full h-auto">
