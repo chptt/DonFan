@@ -29,6 +29,8 @@ export default function Home() {
       const contract = getContract(tempProvider);
       
       console.log('Loading campaigns from contract:', CONTRACT_ADDRESS);
+      console.log('Contract object:', contract);
+      
       const totalNFTs = await contract.getTotalNFTs();
       console.log('Total NFTs:', totalNFTs.toString());
       const campaignData = [];
@@ -54,8 +56,11 @@ export default function Home() {
         }
       }
 
+      console.log('Loaded campaigns:', campaignData);
+
       // Add demo campaign if no real campaigns exist
       if (campaignData.length === 0) {
+        console.log('No real campaigns found, adding demo campaign');
         campaignData.push({
           tokenId: 'demo',
           owner: '0x0000000000000000000000000000000000000000',
@@ -74,6 +79,23 @@ export default function Home() {
       setCampaigns(campaignData);
     } catch (error) {
       console.error('Error loading campaigns:', error);
+      console.error('Error details:', error.message);
+      console.error('Error stack:', error.stack);
+      
+      // Show demo campaign on error
+      setCampaigns([{
+        tokenId: 'demo',
+        owner: '0x0000000000000000000000000000000000000000',
+        charity: 'Housing',
+        totalDonations: 0.0234,
+        goalAmount: 1.0,
+        active: true,
+        isDemo: true,
+        demoInfo: {
+          name: 'Demo Campaign',
+          description: 'This is a demo campaign. Create a real campaign to get started!'
+        }
+      }]);
     } finally {
       setLoading(false);
     }
