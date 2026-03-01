@@ -93,12 +93,25 @@ export default function Dashboard() {
         : 0;
 
       const currentBlock = await tempProvider.getBlockNumber();
-      const fromBlock = Math.max(0, currentBlock - 10000);
+      const fromBlock = Math.max(0, currentBlock - 5000);
       
       console.log(`Querying donation events from block ${fromBlock} to ${currentBlock}`);
       console.log('Querying donation events for token:', tokenId.toString());
+      
       const donationFilter = contract.filters.DonationReceived(tokenId);
-      const donationEvents = await contract.queryFilter(donationFilter, fromBlock, currentBlock);
+      
+      let donationEvents = [];
+      try {
+        donationEvents = await contract.queryFilter(donationFilter, fromBlock, currentBlock);
+      } catch (error) {
+        console.error('Error querying with block range, trying without range:', error);
+        try {
+          donationEvents = await contract.queryFilter(donationFilter, -5000);
+        } catch (err) {
+          console.error('Error querying events:', err);
+        }
+      }
+      
       console.log('Found donation events:', donationEvents.length);
       
       const txList = await Promise.all(
