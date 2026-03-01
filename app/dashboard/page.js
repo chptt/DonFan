@@ -186,7 +186,7 @@ export default function Dashboard() {
             <Link href="/">
               <div className="flex items-center space-x-2 cursor-pointer group">
                 <DonFanLogo size="md" className="group-hover:scale-110 transition-transform" />
-                <h1 className="text-2xl font-bold text-gray-900 group-hover:text-emerald-600 transition-colors">
+                <h1 className="text-2xl font-bold text-gray-900 group-hover:text-slate-700 transition-colors">
                   DonFan
                 </h1>
               </div>
@@ -198,7 +198,7 @@ export default function Dashboard() {
         <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16 text-center">
           <div className="bg-white/90 backdrop-blur-sm rounded-xl border border-gray-200 p-12">
             <div className="mb-6 flex justify-center">
-              <div className="w-20 h-20 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-2xl flex items-center justify-center shadow-lg">
+              <div className="w-20 h-20 bg-gradient-to-br from-slate-600 to-teal-600 rounded-2xl flex items-center justify-center shadow-lg">
                 <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                 </svg>
@@ -219,7 +219,7 @@ export default function Dashboard() {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-600"></div>
+          <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-slate-700"></div>
           <p className="mt-4 text-gray-600">Loading dashboard...</p>
         </div>
       </div>
@@ -233,10 +233,10 @@ export default function Dashboard() {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
             <Link href="/">
               <div className="flex items-center space-x-2 cursor-pointer group">
-                <div className="w-10 h-10 bg-emerald-600 rounded-lg flex items-center justify-center group-hover:bg-emerald-700 transition-colors shadow-lg">
+                <div className="w-10 h-10 bg-slate-700 rounded-lg flex items-center justify-center group-hover:bg-slate-800 transition-colors shadow-lg">
                   <span className="text-white font-bold text-xl">D</span>
                 </div>
-                <h1 className="text-2xl font-bold text-gray-900 group-hover:text-emerald-600 transition-colors">
+                <h1 className="text-2xl font-bold text-gray-900 group-hover:text-slate-700 transition-colors">
                   DonFan
                 </h1>
               </div>
@@ -261,7 +261,7 @@ export default function Dashboard() {
               You haven't created a campaign yet. Create one to start receiving donations!
             </p>
             <Link href="/create-campaign">
-              <button className="px-8 py-4 bg-emerald-600 text-white rounded-lg font-bold hover:bg-emerald-700 transition-all transform hover:scale-105">
+              <button className="px-8 py-4 bg-slate-700 text-white rounded-lg font-bold hover:bg-slate-800 transition-all transform hover:scale-105">
                 Create Your Campaign
               </button>
             </Link>
@@ -277,17 +277,17 @@ export default function Dashboard() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
           <Link href="/">
             <div className="flex items-center space-x-2 cursor-pointer group">
-              <div className="w-10 h-10 bg-emerald-600 rounded-lg flex items-center justify-center group-hover:bg-emerald-700 transition-colors shadow-lg">
+              <div className="w-10 h-10 bg-slate-700 rounded-lg flex items-center justify-center group-hover:bg-slate-800 transition-colors shadow-lg">
                 <span className="text-white font-bold text-xl">D</span>
               </div>
-              <h1 className="text-2xl font-bold text-gray-900 group-hover:text-emerald-600 transition-colors">
+              <h1 className="text-2xl font-bold text-gray-900 group-hover:text-slate-700 transition-colors">
                 DonFan
               </h1>
             </div>
           </Link>
           <div className="flex items-center space-x-4">
             <Link href={`/campaign/${campaign.tokenId}`}>
-              <button className="px-4 py-2 text-emerald-600 font-medium hover:text-emerald-700 transition-colors">
+              <button className="px-4 py-2 text-slate-700 font-medium hover:text-slate-800 transition-colors">
                 View Campaign
               </button>
             </Link>
@@ -316,7 +316,7 @@ export default function Dashboard() {
               <span className="text-2xl">💰</span>
             </div>
             <div className="text-3xl font-bold text-gray-900">{stats.totalDonations.toFixed(4)} ETH</div>
-            <div className="text-sm text-emerald-600 mt-1">
+            <div className="text-sm text-slate-700 mt-1">
               Goal: {campaign.goalAmount.toFixed(4)} ETH
             </div>
           </motion.div>
@@ -334,7 +334,7 @@ export default function Dashboard() {
             <div className="text-3xl font-bold text-gray-900">{Math.min(stats.progressPercentage, 100).toFixed(1)}%</div>
             <div className="w-full bg-gray-200 rounded-full h-2 mt-2">
               <div
-                className="bg-emerald-500 h-2 rounded-full transition-all"
+                className="bg-slate-600 h-2 rounded-full transition-all"
                 style={{ width: `${Math.min(stats.progressPercentage, 100)}%` }}
               />
             </div>
@@ -388,7 +388,7 @@ export default function Dashboard() {
               </div>
               <div className="flex justify-between">
                 <span className="text-gray-600">Status</span>
-                <span className="px-3 py-1 bg-emerald-100 text-emerald-700 rounded-full text-sm font-medium">
+                <span className="px-3 py-1 bg-slate-100 text-slate-800 rounded-full text-sm font-medium">
                   {campaign.active ? 'Active' : 'Inactive'}
                 </span>
               </div>
@@ -399,18 +399,18 @@ export default function Dashboard() {
             </div>
           </div>
 
-          <div className="bg-gradient-to-br from-emerald-50 to-blue-50 rounded-xl border border-emerald-200 p-6">
+          <div className="bg-gradient-to-br from-slate-50 to-blue-50 rounded-xl border border-slate-200 p-6">
             <h3 className="text-xl font-bold text-gray-900 mb-4">Withdraw Funds</h3>
             <div className="mb-4">
               <div className="text-sm text-gray-600 mb-1">Available Balance</div>
-              <div className="text-3xl font-bold text-emerald-600">
+              <div className="text-3xl font-bold text-slate-700">
                 {campaign.totalDonations.toFixed(4)} ETH
               </div>
             </div>
             <button
               onClick={handleWithdraw}
               disabled={campaign.totalDonations === 0}
-              className="w-full px-6 py-3 bg-emerald-600 text-white rounded-lg font-bold hover:bg-emerald-700 transition-all transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+              className="w-full px-6 py-3 bg-slate-700 text-white rounded-lg font-bold hover:bg-slate-800 transition-all transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
             >
               Withdraw All
             </button>
@@ -495,7 +495,7 @@ export default function Dashboard() {
                         </span>
                       </td>
                       <td className="py-3 px-4">
-                        <span className="font-semibold text-emerald-600">
+                        <span className="font-semibold text-slate-700">
                           {tx.amount.toFixed(4)} ETH
                         </span>
                       </td>
@@ -523,3 +523,4 @@ export default function Dashboard() {
     </div>
   );
 }
+

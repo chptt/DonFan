@@ -80,7 +80,7 @@ export default function DonationPanel({ tokenId, contract, signer, onSuccess }) 
       <button
         onClick={handleDonate}
         disabled={!signer || status !== 'idle'}
-        className="w-full px-6 py-4 bg-emerald-600 text-white rounded-lg font-bold text-lg hover:bg-emerald-700 transition-all transform hover:scale-105 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 min-h-[44px]"
+        className="w-full px-6 py-4 bg-slate-700 text-white rounded-lg font-bold text-lg hover:bg-slate-800 transition-all transform hover:scale-105 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 min-h-[44px]"
       >
         {status === 'idle' ? 'Donate Now' : getStatusMessage()}
       </button>
@@ -90,7 +90,7 @@ export default function DonationPanel({ tokenId, contract, signer, onSuccess }) 
           href={`https://sepolia.etherscan.io/tx/${txHash}`}
           target="_blank"
           rel="noopener noreferrer"
-          className="block text-center text-sm text-emerald-600 hover:text-emerald-700 hover:underline transition-colors"
+          className="block text-center text-sm text-slate-700 hover:text-slate-800 hover:underline transition-colors"
         >
           View on Etherscan →
         </a>
@@ -116,3 +116,4 @@ export default function DonationPanel({ tokenId, contract, signer, onSuccess }) 
     </div>
   );
 }
+

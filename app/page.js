@@ -122,7 +122,7 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
           <div className="flex items-center space-x-2">
             <DonFanLogo size="md" className="hover:scale-110 transition-transform cursor-pointer" />
-            <h1 className="text-2xl font-bold text-gray-900 hover:text-emerald-600 transition-colors cursor-pointer">
+            <h1 className="text-2xl font-bold text-gray-900 hover:text-slate-700 transition-colors cursor-pointer">
               DonFan
             </h1>
           </div>
@@ -131,17 +131,17 @@ export default function Home() {
           {account ? (
             <div className="flex items-center space-x-4">
               <Link href="/my-contributions">
-                <button className="px-4 py-2 text-gray-700 font-medium hover:text-emerald-600 transition-colors">
+                <button className="px-4 py-2 text-gray-700 font-medium hover:text-slate-700 transition-colors">
                   My Contributions
                 </button>
               </Link>
               <Link href="/dashboard">
-                <button className="px-4 py-2 text-gray-700 font-medium hover:text-emerald-600 transition-colors">
+                <button className="px-4 py-2 text-gray-700 font-medium hover:text-slate-700 transition-colors">
                   Dashboard
                 </button>
               </Link>
               <Link href="/create-campaign">
-                <button className="px-4 py-2 bg-emerald-600 text-white rounded-lg font-medium hover:bg-emerald-700 transition-all transform hover:scale-105">
+                <button className="px-4 py-2 bg-slate-700 text-white rounded-lg font-medium hover:bg-slate-800 transition-all transform hover:scale-105">
                   Create Campaign
                 </button>
               </Link>
@@ -156,13 +156,13 @@ export default function Home() {
       </header>
 
       <main>
-        <section className="bg-gradient-to-b from-emerald-50/50 to-transparent py-16 sm:py-24 relative overflow-hidden">
-          <div className="absolute top-10 left-10 w-20 h-20 bg-emerald-200/30 rounded-full blur-2xl"></div>
-          <div className="absolute bottom-10 right-10 w-32 h-32 bg-blue-200/30 rounded-full blur-2xl"></div>
+        <section className="bg-gradient-to-b from-slate-50/50 to-transparent py-16 sm:py-24 relative overflow-hidden">
+          <div className="absolute top-10 left-10 w-20 h-20 bg-slate-200/30 rounded-full blur-2xl"></div>
+          <div className="absolute bottom-10 right-10 w-32 h-32 bg-slate-300/30 rounded-full blur-2xl"></div>
           
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
             <div className="text-center max-w-3xl mx-auto">
-              <div className="inline-block mb-6 px-4 py-2 bg-emerald-100 rounded-full text-emerald-700 font-medium text-sm">
+              <div className="inline-block mb-6 px-4 py-2 bg-slate-100 rounded-full text-slate-700 font-medium text-sm">
                 🌟 Making a Difference Together
               </div>
               <h2 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-6">
@@ -186,19 +186,19 @@ export default function Home() {
               
               <div className="flex flex-wrap justify-center gap-4 text-sm text-gray-700">
                 <div className="flex items-center space-x-2 bg-white px-4 py-2 rounded-full shadow-sm hover:shadow-md transition-shadow cursor-pointer">
-                  <svg className="w-5 h-5 text-emerald-600" fill="currentColor" viewBox="0 0 20 20">
+                  <svg className="w-5 h-5 text-slate-600" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                   </svg>
                   <span>100% Transparent</span>
                 </div>
                 <div className="flex items-center space-x-2 bg-white px-4 py-2 rounded-full shadow-sm hover:shadow-md transition-shadow cursor-pointer">
-                  <svg className="w-5 h-5 text-emerald-600" fill="currentColor" viewBox="0 0 20 20">
+                  <svg className="w-5 h-5 text-slate-600" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                   </svg>
                   <span>Secure Donations</span>
                 </div>
                 <div className="flex items-center space-x-2 bg-white px-4 py-2 rounded-full shadow-sm hover:shadow-md transition-shadow cursor-pointer">
-                  <svg className="w-5 h-5 text-emerald-600" fill="currentColor" viewBox="0 0 20 20">
+                  <svg className="w-5 h-5 text-slate-600" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                   </svg>
                   <span>Real Impact</span>
@@ -211,7 +211,7 @@ export default function Home() {
         <section className="py-16 bg-white">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-12">
-              <div className="inline-block mb-4 px-4 py-2 bg-emerald-100 rounded-full text-emerald-700 font-medium text-sm">
+              <div className="inline-block mb-4 px-4 py-2 bg-slate-100 rounded-full text-slate-700 font-medium text-sm">
                 🎯 Support These Causes
               </div>
               <h3 className="text-3xl font-bold text-gray-900 mb-4">Active Campaigns</h3>
@@ -220,7 +220,7 @@ export default function Home() {
 
             {loading ? (
               <div className="text-center py-12">
-                <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-600"></div>
+                <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-slate-700"></div>
                 <p className="mt-4 text-gray-600">Loading campaigns...</p>
                 <p className="mt-2 text-sm text-gray-500">This may take a moment on mobile</p>
               </div>
@@ -233,7 +233,7 @@ export default function Home() {
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
                   <Link href="/create-campaign">
-                    <button className="px-8 py-4 bg-emerald-600 text-white rounded-lg font-bold hover:bg-emerald-700 transition-all transform hover:scale-105 shadow-lg">
+                    <button className="px-8 py-4 bg-slate-700 text-white rounded-lg font-bold hover:bg-slate-800 transition-all transform hover:scale-105 shadow-lg">
                       Create First Campaign 🚀
                     </button>
                   </Link>
@@ -255,7 +255,7 @@ export default function Home() {
                   return (
                     <div
                       key={campaign.tokenId}
-                      className="bg-white rounded-xl border-2 border-gray-200 overflow-hidden hover:shadow-2xl hover:border-emerald-300 transition-all duration-300 transform hover:-translate-y-2"
+                      className="bg-white rounded-xl border-2 border-gray-200 overflow-hidden hover:shadow-2xl hover:border-slate-400 transition-all duration-300 transform hover:-translate-y-2"
                     >
                       <div className="p-6">
                         <div className="flex items-center space-x-3 mb-4">
@@ -286,13 +286,13 @@ export default function Home() {
                         <div className="space-y-2 mb-4">
                           <div className="flex justify-between text-sm group">
                             <span className="text-gray-600">Raised</span>
-                            <span className="font-semibold text-gray-900 group-hover:text-emerald-600 transition-colors">
+                            <span className="font-semibold text-gray-900 group-hover:text-slate-700 transition-colors">
                               {campaign.totalDonations.toFixed(4)} ETH
                             </span>
                           </div>
                           <div className="flex justify-between text-sm group">
                             <span className="text-gray-600">Goal</span>
-                            <span className="font-semibold text-gray-900 group-hover:text-emerald-600 transition-colors">
+                            <span className="font-semibold text-gray-900 group-hover:text-slate-700 transition-colors">
                               {campaign.goalAmount.toFixed(4)} ETH
                             </span>
                           </div>
@@ -301,20 +301,20 @@ export default function Home() {
                         <div className="mb-4">
                           <div className="flex justify-between text-sm mb-2">
                             <span className="text-gray-600">Progress</span>
-                            <span className="font-semibold text-emerald-600">
+                            <span className="font-semibold text-slate-700">
                               {Math.min(progress, 100).toFixed(1)}%
                             </span>
                           </div>
                           <div className="h-3 bg-gray-100 rounded-full overflow-hidden">
                             <div
-                              className="h-full bg-gradient-to-r from-emerald-400 to-emerald-600 transition-all duration-500 hover:from-emerald-500 hover:to-emerald-700"
+                              className="h-full bg-gradient-to-r from-slate-500 to-slate-700 transition-all duration-500 hover:from-slate-600 hover:to-slate-800"
                               style={{ width: `${Math.min(progress, 100)}%` }}
                             />
                           </div>
                         </div>
 
                         <Link href={`/campaign/${campaign.tokenId}`}>
-                          <button className="w-full px-6 py-3 bg-emerald-600 text-white rounded-lg font-medium hover:bg-emerald-700 transition-all transform hover:scale-105 active:scale-95 min-h-[44px] shadow-lg hover:shadow-xl">
+                          <button className="w-full px-6 py-3 bg-slate-700 text-white rounded-lg font-medium hover:bg-slate-800 transition-all transform hover:scale-105 active:scale-95 min-h-[44px] shadow-lg hover:shadow-xl">
                             View & Donate →
                           </button>
                         </Link>
@@ -332,25 +332,25 @@ export default function Home() {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
               <div className="group cursor-pointer">
-                <div className="text-4xl font-bold text-emerald-600 mb-2 group-hover:scale-110 transition-transform">
+                <div className="text-4xl font-bold text-slate-700 mb-2 group-hover:scale-110 transition-transform">
                   {campaigns.length}+
                 </div>
                 <div className="text-sm text-gray-600">Active Campaigns</div>
               </div>
               <div className="group cursor-pointer">
-                <div className="text-4xl font-bold text-emerald-600 mb-2 group-hover:scale-110 transition-transform">
+                <div className="text-4xl font-bold text-slate-700 mb-2 group-hover:scale-110 transition-transform">
                   100%
                 </div>
                 <div className="text-sm text-gray-600">Transparent</div>
               </div>
               <div className="group cursor-pointer">
-                <div className="text-4xl font-bold text-emerald-600 mb-2 group-hover:scale-110 transition-transform">
+                <div className="text-4xl font-bold text-slate-700 mb-2 group-hover:scale-110 transition-transform">
                   6
                 </div>
                 <div className="text-sm text-gray-600">Causes Supported</div>
               </div>
               <div className="group cursor-pointer">
-                <div className="text-4xl font-bold text-emerald-600 mb-2 group-hover:scale-110 transition-transform">
+                <div className="text-4xl font-bold text-slate-700 mb-2 group-hover:scale-110 transition-transform">
                   24/7
                 </div>
                 <div className="text-sm text-gray-600">Support</div>
@@ -369,16 +369,16 @@ export default function Home() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               <div className="text-center group cursor-pointer transform transition-all duration-300 hover:scale-105">
                 <div className="relative mb-6">
-                  <div className="w-20 h-20 bg-gradient-to-br from-emerald-400 to-emerald-600 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:shadow-xl transition-all transform group-hover:rotate-6">
+                  <div className="w-20 h-20 bg-gradient-to-br from-slate-500 to-slate-700 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:shadow-xl transition-all transform group-hover:rotate-6">
                     <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                     </svg>
                   </div>
-                  <div className="absolute -top-2 -right-2 w-8 h-8 bg-emerald-100 rounded-full flex items-center justify-center">
-                    <span className="text-emerald-600 font-bold">1</span>
+                  <div className="absolute -top-2 -right-2 w-8 h-8 bg-slate-100 rounded-full flex items-center justify-center">
+                    <span className="text-slate-700 font-bold">1</span>
                   </div>
                 </div>
-                <h4 className="text-xl font-semibold text-gray-900 mb-2 group-hover:text-emerald-600 transition-colors">Choose a Campaign</h4>
+                <h4 className="text-xl font-semibold text-gray-900 mb-2 group-hover:text-slate-700 transition-colors">Choose a Campaign</h4>
                 <p className="text-gray-600">Browse campaigns from influencers supporting causes like housing, meals, medical aid, education, and environmental cleanup.</p>
               </div>
               <div className="text-center group cursor-pointer transform transition-all duration-300 hover:scale-105">
@@ -417,10 +417,10 @@ export default function Home() {
         <section className="py-12 bg-white/80 backdrop-blur-sm">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              <div className="flex items-start space-x-4 p-6 rounded-xl hover:bg-emerald-50 transition-colors group cursor-pointer">
+              <div className="flex items-start space-x-4 p-6 rounded-xl hover:bg-slate-50 transition-colors group cursor-pointer">
                 <div className="flex-shrink-0">
-                  <div className="w-12 h-12 bg-emerald-100 rounded-lg flex items-center justify-center group-hover:bg-emerald-200 transition-colors">
-                    <svg className="w-6 h-6 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <div className="w-12 h-12 bg-slate-100 rounded-lg flex items-center justify-center group-hover:bg-slate-200 transition-colors">
+                    <svg className="w-6 h-6 text-slate-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
                     </svg>
                   </div>
@@ -502,3 +502,4 @@ export default function Home() {
     </div>
   );
 }
+

@@ -136,7 +136,7 @@ export default function CampaignPage() {
           <Link href="/">
             <div className="flex items-center space-x-2 cursor-pointer group">
               <DonFanLogo size="md" className="group-hover:scale-110 transition-transform" />
-              <h1 className="text-2xl font-bold text-gray-900 group-hover:text-emerald-600 transition-colors">
+              <h1 className="text-2xl font-bold text-gray-900 group-hover:text-slate-700 transition-colors">
                 DonFan
               </h1>
             </div>
@@ -147,7 +147,7 @@ export default function CampaignPage() {
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 relative">
         {/* Decorative background elements */}
-        <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-200/20 rounded-full blur-3xl -z-10"></div>
+        <div className="absolute top-0 right-0 w-64 h-64 bg-slate-200/20 rounded-full blur-3xl -z-10"></div>
         <div className="absolute bottom-0 left-0 w-64 h-64 bg-blue-200/20 rounded-full blur-3xl -z-10"></div>
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -175,7 +175,7 @@ export default function CampaignPage() {
                 <h2 className="text-2xl font-bold text-gray-900">
                   {campaign.charity} Campaign
                 </h2>
-                <span className="px-3 py-1 bg-emerald-50 text-emerald-700 border border-emerald-200 rounded-full text-sm font-medium">
+                <span className="px-3 py-1 bg-slate-50 text-slate-700 border border-slate-200 rounded-full text-sm font-medium">
                   Active
                 </span>
               </div>
