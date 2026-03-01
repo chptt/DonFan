@@ -92,9 +92,13 @@ export default function Dashboard() {
         ? (campaignData.totalDonations / campaignData.goalAmount) * 100 
         : 0;
 
+      const currentBlock = await tempProvider.getBlockNumber();
+      const fromBlock = Math.max(0, currentBlock - 10000);
+      
+      console.log(`Querying donation events from block ${fromBlock} to ${currentBlock}`);
       console.log('Querying donation events for token:', tokenId.toString());
       const donationFilter = contract.filters.DonationReceived(tokenId);
-      const donationEvents = await contract.queryFilter(donationFilter);
+      const donationEvents = await contract.queryFilter(donationFilter, fromBlock, currentBlock);
       console.log('Found donation events:', donationEvents.length);
       
       const txList = await Promise.all(

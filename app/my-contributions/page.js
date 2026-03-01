@@ -67,8 +67,13 @@ export default function MyContributions() {
       
       console.log('Contract address:', contract.target);
       
+      const currentBlock = await tempProvider.getBlockNumber();
+      const fromBlock = Math.max(0, currentBlock - 10000);
+      
+      console.log(`Querying events from block ${fromBlock} to ${currentBlock}`);
+      
       const donationFilter = contract.filters.DonationReceived(null, account);
-      const donationEvents = await contract.queryFilter(donationFilter);
+      const donationEvents = await contract.queryFilter(donationFilter, fromBlock, currentBlock);
       
       console.log('Found donation events:', donationEvents.length);
       
