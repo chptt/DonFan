@@ -143,10 +143,10 @@ export default function CreateCampaign() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
           <Link href="/">
             <div className="flex items-center space-x-2 cursor-pointer group">
-              <div className="w-10 h-10 bg-slate-700 rounded-lg flex items-center justify-center group-hover:bg-slate-800 transition-colors shadow-lg">
+              <div className="w-10 h-10 bg-emerald-600 rounded-lg flex items-center justify-center group-hover:bg-emerald-700 transition-colors shadow-lg">
                 <span className="text-white font-bold text-xl">D</span>
               </div>
-              <h1 className="text-2xl font-bold text-gray-900 group-hover:text-slate-700 transition-colors">
+              <h1 className="text-2xl font-bold text-gray-900 group-hover:text-emerald-600 transition-colors">
                 DonFan
               </h1>
             </div>
@@ -191,7 +191,7 @@ export default function CreateCampaign() {
                   value={formData.campaignName}
                   onChange={handleInputChange}
                   placeholder="My Charity Campaign"
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-slate-600 focus:border-transparent"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
                 />
               </div>
 
@@ -207,7 +207,7 @@ export default function CreateCampaign() {
                   onChange={handleInputChange}
                   maxLength="50"
                   placeholder="Enter your name (e.g., John Doe, @username)"
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-slate-600 focus:border-transparent"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
                   required
                 />
                 <p className="text-sm text-gray-500 mt-1">
@@ -229,7 +229,7 @@ export default function CreateCampaign() {
                     value={formData.profileImageUrl.startsWith('data:') ? '' : formData.profileImageUrl}
                     onChange={handleInputChange}
                     placeholder="Paste your image link here (from Instagram, Twitter, etc.)"
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-slate-600 focus:border-transparent"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
                   />
                   <p className="text-xs text-gray-500 mt-1">
                     Right-click your profile picture → Copy image address → Paste here
@@ -241,10 +241,10 @@ export default function CreateCampaign() {
                 {/* File Upload Button */}
                 <div className="mb-3">
                   <label htmlFor="fileUpload" className="cursor-pointer">
-                    <div className="flex items-center justify-center w-full px-4 py-3 border-2 border-dashed border-gray-300 rounded-lg hover:border-slate-600 transition-colors bg-gray-50 hover:bg-emerald-50">
+                    <div className="flex items-center justify-center w-full px-4 py-3 border-2 border-dashed border-gray-300 rounded-lg hover:border-emerald-500 transition-colors bg-gray-50 hover:bg-emerald-50">
                       {uploadingImage ? (
                         <div className="flex items-center space-x-2">
-                          <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-slate-700"></div>
+                          <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-emerald-600"></div>
                           <span className="text-gray-600">Loading...</span>
                         </div>
                       ) : (
@@ -279,7 +279,7 @@ export default function CreateCampaign() {
                       src={imagePreview || formData.profileImageUrl} 
                       alt="Preview" 
                       crossOrigin="anonymous"
-                      className="w-16 h-16 rounded-full object-cover border-2 border-slate-600 shadow-md"
+                      className="w-16 h-16 rounded-full object-cover border-2 border-emerald-500 shadow-md"
                       onError={(e) => {
                         e.target.style.display = 'none';
                       }}
@@ -333,7 +333,7 @@ export default function CreateCampaign() {
                   onChange={handleInputChange}
                   step="0.01"
                   placeholder="1.0"
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-slate-600 focus:border-transparent"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
                 />
                 <p className="text-sm text-gray-500 mt-1">
                   Set a realistic goal for your campaign
@@ -349,7 +349,7 @@ export default function CreateCampaign() {
               <button
                 onClick={handleCreateCampaign}
                 disabled={loading || !formData.goalAmount || !formData.influencerName}
-                className="w-full px-6 py-4 bg-slate-700 text-white rounded-lg font-bold text-lg hover:bg-slate-800 transition-all transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+                className="w-full px-6 py-4 bg-emerald-600 text-white rounded-lg font-bold text-lg hover:bg-emerald-700 transition-all transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
               >
                 {loading ? 'Creating Campaign...' : 'Create Campaign 🚀'}
               </button>
