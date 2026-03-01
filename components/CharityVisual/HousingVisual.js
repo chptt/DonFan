@@ -76,23 +76,29 @@ export default function HousingVisual({ progressPercentage }) {
           {/* Main wall */}
           <rect x="90" y="160" width="220" height="110" fill="#DC2626" />
           
-          {/* Brick pattern */}
-          {[...Array(8)].map((_, row) => (
-            <g key={row}>
-              {[...Array(6)].map((_, col) => (
-                <rect
-                  key={col}
-                  x={95 + col * 35 + (row % 2 === 0 ? 0 : -17)}
-                  y={165 + row * 13}
-                  width="32"
-                  height="12"
-                  fill="none"
-                  stroke="#B91C1C"
-                  strokeWidth="1"
-                />
-              ))}
-            </g>
-          ))}
+          {/* Brick pattern - clipped to wall boundaries */}
+          <clipPath id="wallClip">
+            <rect x="90" y="160" width="220" height="110" />
+          </clipPath>
+          
+          <g clipPath="url(#wallClip)">
+            {[...Array(8)].map((_, row) => (
+              <g key={row}>
+                {[...Array(7)].map((_, col) => (
+                  <rect
+                    key={col}
+                    x={90 + col * 32 + (row % 2 === 0 ? 0 : -16)}
+                    y={160 + row * 13}
+                    width="30"
+                    height="12"
+                    fill="none"
+                    stroke="#B91C1C"
+                    strokeWidth="1"
+                  />
+                ))}
+              </g>
+            ))}
+          </g>
         </motion.g>
       )}
       
@@ -106,22 +112,29 @@ export default function HousingVisual({ progressPercentage }) {
           {/* Main roof */}
           <polygon points="200,100 70,160 330,160" fill="#7C2D12" />
           
-          {/* Roof shingles */}
-          {[...Array(4)].map((_, row) => (
-            <g key={row}>
-              {[...Array(10)].map((_, col) => (
-                <rect
-                  key={col}
-                  x={80 + col * 24 - row * 12}
-                  y={120 + row * 10}
-                  width="22"
-                  height="8"
-                  fill="#92400E"
-                  opacity="0.8"
-                />
-              ))}
-            </g>
-          ))}
+          {/* Clip path for roof shingles */}
+          <clipPath id="roofClip">
+            <polygon points="200,100 70,160 330,160" />
+          </clipPath>
+          
+          {/* Roof shingles - clipped to roof shape */}
+          <g clipPath="url(#roofClip)">
+            {[...Array(5)].map((_, row) => (
+              <g key={row}>
+                {[...Array(12)].map((_, col) => (
+                  <rect
+                    key={col}
+                    x={75 + col * 22 - row * 6}
+                    y={115 + row * 9}
+                    width="20"
+                    height="8"
+                    fill="#92400E"
+                    opacity="0.8"
+                  />
+                ))}
+              </g>
+            ))}
+          </g>
           
           {/* Roof edge */}
           <polygon points="200,100 70,160 330,160" fill="none" stroke="#78350F" strokeWidth="2" />
