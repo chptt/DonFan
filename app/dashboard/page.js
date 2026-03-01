@@ -103,16 +103,11 @@ export default function Dashboard() {
       let donationEvents = [];
       try {
         donationEvents = await contract.queryFilter(donationFilter, fromBlock, currentBlock);
+        console.log('Found donation events:', donationEvents.length);
       } catch (error) {
-        console.error('Error querying with block range, trying without range:', error);
-        try {
-          donationEvents = await contract.queryFilter(donationFilter, -5000);
-        } catch (err) {
-          console.error('Error querying events:', err);
-        }
+        console.error('Error querying donation events:', error);
+        // Continue without events - just show campaign data
       }
-      
-      console.log('Found donation events:', donationEvents.length);
       
       const txList = await Promise.all(
         donationEvents.map(async (event) => {
@@ -415,13 +410,46 @@ export default function Dashboard() {
 
         {/* Transactions Table */}
         <div className="bg-white/90 backdrop-blur-sm rounded-xl border border-gray-200 p-6">
-          <h3 className="text-xl font-bold text-gray-900 mb-4">Recent Donations</h3>
+          <div className="flex justify-between items-center mb-4">
+            <h3 className="text-xl font-bold text-gray-900">Recent Donations</h3>
+            {transactions.length === 0 && stats.totalDonations > 0 && (
+              <a
+                href={`https://sepolia.etherscan.io/address/${process.env.NEXT_PUBLIC_CONTRACT_ADDRESS}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-sm text-blue-600 hover:text-blue-700 hover:underline"
+              >
+                View on Etherscan →
+              </a>
+            )}
+          </div>
           
           {transactions.length === 0 ? (
             <div className="text-center py-12">
-              <div className="text-6xl mb-4">🎁</div>
-              <p className="text-gray-600">No donations yet</p>
-              <p className="text-sm text-gray-500 mt-2">Share your campaign to start receiving donations!</p>
+              <div className="text-6xl mb-4">
+                {stats.totalDonations > 0 ? '📊' : '🎁'}
+              </div>
+              {stats.totalDonations > 0 ? (
+                <>
+                  <p className="text-gray-600 mb-2">Transaction history temporarily unavailable</p>
+                  <p className="text-sm text-gray-500 mb-4">
+                    Your campaign has received {stats.totalDonations.toFixed(4)} ETH in donations
+                  </p>
+                  <a
+                    href={`https://sepolia.etherscan.io/address/${process.env.NEXT_PUBLIC_CONTRACT_ADDRESS}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-block px-6 py-3 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-all"
+                  >
+                    View Transactions on Etherscan
+                  </a>
+                </>
+              ) : (
+                <>
+                  <p className="text-gray-600">No donations yet</p>
+                  <p className="text-sm text-gray-500 mt-2">Share your campaign to start receiving donations!</p>
+                </>
+              )}
             </div>
           ) : (
             <div className="overflow-x-auto">
