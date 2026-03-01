@@ -37,7 +37,6 @@ export default function MyContributions() {
     try {
       console.log('Loading contributions for account:', account);
       
-      // When wallet is connected, use MetaMask provider, otherwise use window.ethereum if available
       let tempProvider;
       
       if (provider) {
@@ -45,15 +44,29 @@ export default function MyContributions() {
       } else if (typeof window !== 'undefined' && window.ethereum) {
         tempProvider = new ethers.BrowserProvider(window.ethereum);
       } else {
-        // Fallback: Use Cloudflare's public Ethereum gateway
-        tempProvider = new ethers.JsonRpcProvider('https://ethereum-sepolia.publicnode.com');
+        const rpcUrls = [
+          'https://ethereum-sepolia.publicnode.com',
+          'https://rpc.sepolia.org',
+          'https://sepolia.gateway.tenderly.co'
+        ];
+        
+        for (const rpcUrl of rpcUrls) {
+          try {
+            tempProvider = new ethers.JsonRpcProvider(rpcUrl);
+            await tempProvider.getBlockNumber();
+            console.log('Connected to RPC:', rpcUrl);
+            break;
+          } catch (err) {
+            console.log('Failed RPC:', rpcUrl);
+            continue;
+          }
+        }
       }
       
       const contract = getContract(tempProvider);
       
       console.log('Contract address:', contract.target);
       
-      // Get all donation events where this wallet was the donor
       const donationFilter = contract.filters.DonationReceived(null, account);
       const donationEvents = await contract.queryFilter(donationFilter);
       
@@ -65,23 +78,18 @@ export default function MyContributions() {
         return;
       }
 
-      // Process each donation
       const contributionsList = await Promise.all(
         donationEvents.map(async (event) => {
           const tokenId = event.args.tokenId;
           const amount = parseFloat(formatEther(event.args.amount));
           const block = await event.getBlock();
           
-          // Get campaign details
           try {
             const influencer = await contract.influencers(tokenId);
             const owner = await contract.ownerOf(tokenId);
             
             console.log(`Campaign ${tokenId} data:`, influencer);
             
-            // Handle both old and new contract formats
-            // Old contract: [charity, totalDonations, goalAmount, active, creator]
-            // New contract: [charity, totalDonations, goalAmount, active, creator, influencerName, profileImageUrl]
             const hasNewFields = influencer.length >= 7;
             
             return {
@@ -89,12 +97,12 @@ export default function MyContributions() {
               amount,
               timestamp: block.timestamp,
               txHash: event.transactionHash,
-              charity: CHARITY_TYPES[influencer[0]], // charity is index 0
+              charity: CHARITY_TYPES[influencer[0]],
               campaignOwner: owner,
-              goalAmount: parseFloat(formatEther(influencer[2])), // goalAmount is index 2
-              totalDonations: parseFloat(formatEther(influencer[1])), // totalDonations is index 1
-              influencerName: hasNewFields && influencer[5] ? influencer[5] : `${owner.slice(0, 6)}...${owner.slice(-4)}`, // influencerName is index 5
-              profileImageUrl: hasNewFields && influencer[6] ? influencer[6] : '' // profileImageUrl is index 6
+              goalAmount: parseFloat(formatEther(influencer[2])),
+              totalDonations: parseFloat(formatEther(influencer[1])),
+              influencerName: hasNewFields && influencer[5] ? influencer[5] : `${owner.slice(0, 6)}...${owner.slice(-4)}`,
+              profileImageUrl: hasNewFields && influencer[6] ? influencer[6] : ''
             };
           } catch (error) {
             console.error(`Error loading campaign ${tokenId}:`, error);
@@ -103,7 +111,6 @@ export default function MyContributions() {
         })
       );
 
-      // Filter out any failed loads and sort by most recent
       const validContributions = contributionsList
         .filter(c => c !== null)
         .sort((a, b) => b.timestamp - a.timestamp);
@@ -111,10 +118,9 @@ export default function MyContributions() {
       console.log('Valid contributions:', validContributions.length);
       setContributions(validContributions);
 
-      // Calculate statistics
       const totalDonated = validContributions.reduce((sum, c) => sum + c.amount, 0);
       const uniqueCampaigns = new Set(validContributions.map(c => c.tokenId)).size;
-      const largestDonation = Math.max(...validContributions.map(c => c.amount));
+      const largestDonation = validContributions.length > 0 ? Math.max(...validContributions.map(c => c.amount)) : 0;
       const firstDonation = validContributions[validContributions.length - 1];
 
       setStats({
@@ -236,14 +242,25 @@ export default function MyContributions() {
           <div className="bg-white/90 backdrop-blur-sm rounded-xl border border-gray-200 p-12">
             <div className="text-6xl mb-6">💝</div>
             <h2 className="text-3xl font-bold text-gray-900 mb-4">No Contributions Yet</h2>
-            <p className="text-gray-600 mb-8">
+            <p className="text-gray-600 mb-4">
               You haven't made any donations yet. Browse campaigns and start making a difference!
             </p>
-            <Link href="/">
-              <button className="px-8 py-4 bg-emerald-600 text-white rounded-lg font-bold hover:bg-emerald-700 transition-all transform hover:scale-105">
-                Browse Campaigns
+            <p className="text-sm text-gray-500 mb-8">
+              Note: It may take 1-2 minutes for donations to appear after transaction confirmation.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Link href="/">
+                <button className="px-8 py-4 bg-emerald-600 text-white rounded-lg font-bold hover:bg-emerald-700 transition-all transform hover:scale-105">
+                  Browse Campaigns
+                </button>
+              </Link>
+              <button
+                onClick={loadContributions}
+                className="px-8 py-4 bg-gray-100 text-gray-700 rounded-lg font-bold hover:bg-gray-200 transition-all"
+              >
+                Retry Loading
               </button>
-            </Link>
+            </div>
           </div>
         </main>
       </div>
@@ -276,10 +293,18 @@ export default function MyContributions() {
       </header>
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Header */}
-        <div className="mb-8">
-          <h2 className="text-4xl font-bold text-gray-900 mb-2">My Contributions</h2>
-          <p className="text-gray-600">Track your impact across all campaigns</p>
+        <div className="mb-8 flex justify-between items-center">
+          <div>
+            <h2 className="text-4xl font-bold text-gray-900 mb-2">My Contributions</h2>
+            <p className="text-gray-600">Track your impact across all campaigns</p>
+          </div>
+          <button
+            onClick={loadContributions}
+            disabled={loading}
+            className="px-6 py-3 bg-emerald-600 text-white rounded-lg font-medium hover:bg-emerald-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {loading ? 'Loading...' : 'Refresh'}
+          </button>
         </div>
 
         {/* Stats Grid */}
