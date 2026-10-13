@@ -1,11 +1,10 @@
 'use client';
 import { useState, useEffect } from 'react';
-import { ethers } from 'ethers';
 import Link from 'next/link';
 import WalletConnectButton from '@/components/WalletConnectButton';
 import InfluencerAvatar from '@/components/InfluencerAvatar';
 import DonFanLogo from '@/components/DonFanLogo';
-import { getContract, CHARITY_TYPES, formatEther, CONTRACT_ADDRESS } from '@/lib/contract';
+import { getContract, getReadOnlyProvider, CHARITY_TYPES, formatEther, CONTRACT_ADDRESS } from '@/lib/contract';
 
 export default function Home() {
   const [provider, setProvider] = useState(null);
@@ -13,10 +12,12 @@ export default function Home() {
   const [account, setAccount] = useState(null);
   const [campaigns, setCampaigns] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState(null);
 
   useEffect(() => {
     loadCampaigns();
-  }, [provider]); // Reload when provider changes
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // Load once on mount using read-only provider; wallet is only needed for writes
 
   const handleWalletConnect = (p, s, a) => {
     setProvider(p);
@@ -25,44 +26,16 @@ export default function Home() {
   };
 
   const loadCampaigns = async () => {
+    setLoadError(null);
+    setLoading(true);
     try {
-      let tempProvider;
-      
-      if (provider) {
-        console.log('Using connected provider');
-        tempProvider = provider;
-      } else if (typeof window !== 'undefined' && window.ethereum) {
-        console.log('Using window.ethereum');
-        tempProvider = new ethers.BrowserProvider(window.ethereum);
-      } else {
-        console.log('Using public RPC');
-        const rpcUrls = [
-          'https://ethereum-sepolia.publicnode.com',
-          'https://rpc.sepolia.org',
-          'https://sepolia.gateway.tenderly.co'
-        ];
-        
-        for (const rpcUrl of rpcUrls) {
-          try {
-            tempProvider = new ethers.JsonRpcProvider(rpcUrl);
-            await tempProvider.getBlockNumber();
-            console.log('Connected to RPC:', rpcUrl);
-            break;
-          } catch (err) {
-            console.log('Failed to connect to:', rpcUrl);
-            continue;
-          }
-        }
-        
-        if (!tempProvider) {
-          throw new Error('Could not connect to any RPC provider');
-        }
-      }
-      
-      const contract = getContract(tempProvider);
-      
+      // Always use a JsonRpcProvider for reads so chain mismatch in the
+      // connected wallet never breaks the campaign list.
+      const readProvider = await getReadOnlyProvider();
+      const contract = getContract(readProvider);
+
       console.log('Loading campaigns from contract:', CONTRACT_ADDRESS);
-      
+
       const totalNFTs = await contract.getTotalNFTs();
       console.log('Total NFTs:', totalNFTs.toString());
       const campaignData = [];
@@ -71,7 +44,7 @@ export default function Home() {
         try {
           const influencer = await contract.influencers(i);
           const owner = await contract.ownerOf(i);
-          
+
           campaignData.push({
             tokenId: i,
             owner,
@@ -90,14 +63,11 @@ export default function Home() {
       }
 
       console.log('Loaded campaigns:', campaignData);
-
       setCampaigns(campaignData);
     } catch (error) {
       console.error('Error loading campaigns:', error);
       console.error('Error details:', error.message);
-      console.error('Error stack:', error.stack);
-      
-      // Show empty state on error
+      setLoadError(error.message ?? 'Could not load campaigns. Please try again.');
       setCampaigns([]);
     } finally {
       setLoading(false);
@@ -223,6 +193,23 @@ export default function Home() {
                 <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-600"></div>
                 <p className="mt-4 text-gray-600">Loading campaigns...</p>
                 <p className="mt-2 text-sm text-gray-500">This may take a moment on mobile</p>
+              </div>
+            ) : loadError ? (
+              <div className="text-center py-16">
+                <div className="text-6xl mb-6">⚠️</div>
+                <h3 className="text-2xl font-bold text-gray-900 mb-4">Could Not Load Campaigns</h3>
+                <p className="text-gray-600 mb-2 max-w-md mx-auto">
+                  There was a problem connecting to the blockchain.
+                </p>
+                <p className="text-sm text-red-600 mb-8 max-w-lg mx-auto font-mono bg-red-50 p-3 rounded-lg">
+                  {loadError}
+                </p>
+                <button
+                  onClick={loadCampaigns}
+                  className="px-8 py-4 bg-emerald-600 text-white rounded-lg font-bold hover:bg-emerald-700 transition-all transform hover:scale-105 shadow-lg"
+                >
+                  Retry
+                </button>
               </div>
             ) : campaigns.length === 0 ? (
               <div className="text-center py-16">

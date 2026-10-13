@@ -1,6 +1,5 @@
 'use client';
 import { useState, useEffect } from 'react';
-import { ethers } from 'ethers';
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import WalletConnectButton from '@/components/WalletConnectButton';
@@ -13,7 +12,7 @@ import EducationVisual from '@/components/CharityVisual/EducationVisual';
 import RiverVisual from '@/components/CharityVisual/RiverVisual';
 import InfluencerAvatar from '@/components/InfluencerAvatar';
 import DonFanLogo from '@/components/DonFanLogo';
-import { getContract, CHARITY_TYPES, formatEther } from '@/lib/contract';
+import { getContract, getReadOnlyProvider, CHARITY_TYPES, formatEther } from '@/lib/contract';
 
 export default function CampaignPage() {
   const params = useParams();
@@ -24,44 +23,38 @@ export default function CampaignPage() {
   const [signer, setSigner] = useState(null);
   const [campaign, setCampaign] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState(null);
 
   useEffect(() => {
     loadCampaign();
-  }, [tokenId, provider]); // Reload when provider changes
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [tokenId]); // Reads use a fixed RPC provider; wallet only needed for writes
 
   const loadCampaign = async () => {
+    setLoadError(null);
     try {
-      // When wallet is connected, use MetaMask provider, otherwise use window.ethereum if available
-      let tempProvider;
-      
-      if (provider) {
-        tempProvider = provider;
-      } else if (typeof window !== 'undefined' && window.ethereum) {
-        tempProvider = new ethers.BrowserProvider(window.ethereum);
-      } else {
-        // Fallback: Use Cloudflare's public Ethereum gateway
-        tempProvider = new ethers.JsonRpcProvider('https://ethereum-sepolia.publicnode.com');
-      }
-      
-      const contract = getContract(tempProvider);
-      
+      // Always use a read-only RPC provider so the campaign loads regardless of
+      // whether the user has a wallet connected or on the right network.
+      const readProvider = await getReadOnlyProvider();
+      const contract = getContract(readProvider);
+
       const influencer = await contract.influencers(tokenId);
       const owner = await contract.ownerOf(tokenId);
-      
-      // New contract returns: [charity, totalDonations, goalAmount, active, creator, influencerName, profileImageUrl]
+
       setCampaign({
         tokenId,
         owner,
-        charity: CHARITY_TYPES[influencer[0]], // charity is index 0
-        totalDonations: parseFloat(formatEther(influencer[1])), // totalDonations is index 1
-        goalAmount: parseFloat(formatEther(influencer[2])), // goalAmount is index 2
-        active: influencer[3], // active is index 3
-        creator: influencer[4], // creator is index 4
-        influencerName: influencer[5] || `${owner.slice(0, 6)}...${owner.slice(-4)}`, // influencerName is index 5
-        profileImageUrl: influencer[6] || '' // profileImageUrl is index 6
+        charity: CHARITY_TYPES[influencer[0]],
+        totalDonations: parseFloat(formatEther(influencer[1])),
+        goalAmount: parseFloat(formatEther(influencer[2])),
+        active: influencer[3],
+        creator: influencer[4],
+        influencerName: influencer[5] || `${owner.slice(0, 6)}...${owner.slice(-4)}`,
+        profileImageUrl: influencer[6] || ''
       });
     } catch (error) {
       console.error('Error loading campaign:', error);
+      setLoadError(error.message ?? 'Failed to load campaign.');
     } finally {
       setLoading(false);
     }
@@ -114,7 +107,12 @@ export default function CampaignPage() {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <p className="text-xl text-gray-600 mb-4">Campaign not found</p>
+          <p className="text-xl text-gray-600 mb-2">Campaign not found</p>
+          {loadError && (
+            <p className="text-sm text-red-600 mb-4 font-mono bg-red-50 p-3 rounded-lg max-w-lg">
+              {loadError}
+            </p>
+          )}
           <Link href="/">
             <button className="px-6 py-3 bg-blue-600 text-white rounded-lg">
               Back to Home

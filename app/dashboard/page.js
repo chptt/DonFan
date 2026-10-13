@@ -1,11 +1,10 @@
 'use client';
 import { useState, useEffect } from 'react';
-import { ethers } from 'ethers';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import WalletConnectButton from '@/components/WalletConnectButton';
 import DonFanLogo from '@/components/DonFanLogo';
-import { getContract, CHARITY_TYPES, formatEther } from '@/lib/contract';
+import { getContract, getReadOnlyProvider, CHARITY_TYPES, formatEther } from '@/lib/contract';
 
 export default function Dashboard() {
   const [provider, setProvider] = useState(null);
@@ -36,31 +35,10 @@ export default function Dashboard() {
   const loadDashboardData = async () => {
     setLoading(true);
     try {
-      let tempProvider;
-      
-      if (provider) {
-        tempProvider = provider;
-      } else if (typeof window !== 'undefined' && window.ethereum) {
-        tempProvider = new ethers.BrowserProvider(window.ethereum);
-      } else {
-        const rpcUrls = [
-          'https://ethereum-sepolia.publicnode.com',
-          'https://rpc.sepolia.org',
-          'https://sepolia.gateway.tenderly.co'
-        ];
-        
-        for (const rpcUrl of rpcUrls) {
-          try {
-            tempProvider = new ethers.JsonRpcProvider(rpcUrl);
-            await tempProvider.getBlockNumber();
-            break;
-          } catch (err) {
-            continue;
-          }
-        }
-      }
-      
-      const contract = getContract(tempProvider);
+      // Use a read-only RPC provider for all data fetching.
+      // The connected wallet (provider/signer) is only used for transactions.
+      const readProvider = await getReadOnlyProvider();
+      const contract = getContract(readProvider);
       
       const campaignIds = await contract.getCampaignsByCreator(account);
       
@@ -92,7 +70,7 @@ export default function Dashboard() {
         ? (campaignData.totalDonations / campaignData.goalAmount) * 100 
         : 0;
 
-      const currentBlock = await tempProvider.getBlockNumber();
+      const currentBlock = await readProvider.getBlockNumber();
       const fromBlock = Math.max(0, currentBlock - 5000);
       
       console.log(`Querying donation events from block ${fromBlock} to ${currentBlock}`);

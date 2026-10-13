@@ -1,13 +1,37 @@
 'use client';
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { parseEther } from '@/lib/contract';
+import { parseEther, SEPOLIA_CHAIN_ID, SEPOLIA_CHAIN_ID_DECIMAL } from '@/lib/contract';
 
 export default function DonationPanel({ tokenId, contract, signer, onSuccess }) {
   const [amount, setAmount] = useState('');
   const [status, setStatus] = useState('idle');
   const [txHash, setTxHash] = useState('');
   const [showModal, setShowModal] = useState(false);
+
+  const ensureCorrectChain = async () => {
+    if (typeof window === 'undefined' || !window.ethereum) return;
+    // Resolve the active provider (mirrors WalletConnectButton logic)
+    const eth = Array.isArray(window.ethereum?.providers)
+      ? (window.ethereum.providers.find((p) => p.isMetaMask) ?? window.ethereum.providers[0])
+      : window.ethereum;
+    if (!eth?.request) return;
+
+    const chainHex = await eth.request({ method: 'eth_chainId' });
+    if (parseInt(chainHex, 16) === SEPOLIA_CHAIN_ID_DECIMAL) return;
+
+    try {
+      await eth.request({
+        method: 'wallet_switchEthereumChain',
+        params: [{ chainId: SEPOLIA_CHAIN_ID }],
+      });
+    } catch (err) {
+      if (err.code === 4001) {
+        throw new Error('Please switch your wallet to the Sepolia testnet to donate.');
+      }
+      throw err;
+    }
+  };
 
   const handleDonate = async () => {
     if (!amount || parseFloat(amount) <= 0) {
@@ -22,6 +46,10 @@ export default function DonationPanel({ tokenId, contract, signer, onSuccess }) 
 
     try {
       setStatus('signing');
+
+      // Guard: make sure the wallet is on Sepolia before sending
+      await ensureCorrectChain();
+
       const contractWithSigner = contract.connect(signer);
       const tx = await contractWithSigner.donate(tokenId, {
         value: parseEther(amount)
@@ -43,7 +71,7 @@ export default function DonationPanel({ tokenId, contract, signer, onSuccess }) 
     } catch (error) {
       console.error('Donation error:', error);
       setStatus('failed');
-      alert(error.reason || 'Transaction failed');
+      alert(error.message ?? error.reason ?? 'Transaction failed');
       setTimeout(() => setStatus('idle'), 3000);
     }
   };
